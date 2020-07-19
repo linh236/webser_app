@@ -81,6 +81,8 @@ target 'webser_app' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
+  pod 'RNDateTimePicker', :path => '../node_modules/@react-native-community/datetimepicker'
+
   target 'webser_appTests' do
     inherit! :complete
     # Pods for testing

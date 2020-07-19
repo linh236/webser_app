@@ -8,30 +8,34 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
-  NativeModules
+  NativeModules,
 } from 'react-native';
+import TimePicker from 'react-native-simple-time-picker';
 function LedComponent({ }) {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [dt, setDt] = useState(new Date().toLocaleString());
 //  console.log(data)
   const [id, setId] = useState();
   useEffect(() => {
     AsyncStorage.getItem('id', (error, value) => {
       if (value !== null) {
         setId(value)
-        let url = `https://linhser.herokuapp.com/api/led_status/${value}`;
-        fetch(url).then((response) => response.json())
-          .then((json) => {
-            setData(json.leds);
-          })
-          .catch((error) => {
-            console.error(error);
-          })
-          .finally(() => setLoading(false));
+        fetchLeds(value)
       }
     });
   }, []);
-
+  const fetchLeds = (value) => {
+    let url = `https://linhser.herokuapp.com/api/led_status/${value}`;
+    fetch(url).then((response) => response.json())
+      .then((json) => {
+        setData(json.leds);
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => setLoading(false));
+  }
   // Send data to api 
   const SendDataApi = (name, column, status) => {
     let SetStatus = '';
@@ -57,9 +61,18 @@ function LedComponent({ }) {
       .then((data) => {
         // NativeModules.DevSettings.reload();
         alert("Thanh cong");
-
-        console.log(data);
+        fetchLeds(id);        
       }).catch((err) => console.error(err))
+  }
+  // setup time
+  const SetupTime = () => {
+    useEffect(() => {
+      let secTimer = setInterval( () => {
+        setDt(new Date().toLocaleString())
+      },1000)
+  
+      return () => clearInterval(secTimer);
+    }, []);
   }
   return (
     <>
@@ -114,7 +127,7 @@ function LedComponent({ }) {
               </View>
               <View style={styles.third}>
                 <Text style={styles.Title}>Timer</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => SetupTime()}> 
                   <Text style={styles.TitleTurnon}>{data['LED_STATUS0']['TURNON']}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity>

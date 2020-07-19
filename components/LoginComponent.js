@@ -6,13 +6,15 @@ import {
   View,
   Text,
   StatusBar,
-  Button, 
+  Button,
   TextInput,
   TouchableOpacity,
   Image,
   Dimensions,
-  NativeModules
+  NativeModules,
+  TouchableHighlight
 } from 'react-native';
+import TimePicker from 'react-native-simple-time-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 const dimensions = Dimensions.get('window');
 const setHeight = Math.round(dimensions.width * 9 / 16);
@@ -42,7 +44,7 @@ function LoginComponent({ navigation }) {
         }else{
           alert('Login failed');
         }
-      }).catch((err) => console.error(err)) 
+      }).catch((err) => console.error(err))
   }
 // exists(id) ? 'Home' : 'Login'
    function CheckNavigation () {
@@ -58,52 +60,78 @@ function LoginComponent({ navigation }) {
 return (
    <>
     <ScrollView>
-    <View style={styles.container}>
-      <View style={styles.up}>
-         <Image source={require('../images/bk.jpeg')}
-          style = {styles.logo}
-          />
-      </View>
-      <View style={styles.down}>
-        <TextInput
-          placeholder="Nhap email"
-          textContentType = 'emailAddress'
-          keyboardType = 'email-address'
-          onChangeText={text=>setEmail(text)}
-          style={styles.TextInput}
-        />
-        <TextInput 
-          style={styles.textInput}
-          placeholder = 'Nhap password'
-          secureTextEntry={true}
-          onChangeText={text=>setPassword(text)}
-        />
-      <TouchableOpacity style={styles.loginButton} onPress={()=>CheckLogin(email, password)} >
-        <Text style = {styles.loginButtonTitle}>LOGIN</Text>
-      </TouchableOpacity>
-      </View>
+    <View style={styles.up}>
+      <Image source={require('../images/bk.jpeg')}
+      style = {styles.logo}
+      />
     </View>
+    <View style={styles.container}>
+        <View style={styles.inputContainer}>
+          <TextInput style={styles.inputs}
+              placeholder="Email"
+              keyboardType="email-address"
+              underlineColorAndroid='transparent'
+              onChangeText={text=>setEmail(text)}/>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput style={styles.inputs}
+              placeholder="Password"
+              secureTextEntry={true}
+              underlineColorAndroid='transparent'
+              onChangeText={text=>setPassword(text)}/>
+        </View>
+        <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={()=>CheckLogin(email, password)}>
+          <Text style={styles.loginText}>Login</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
    </>
   );
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: '#DCDCDC',
   },
-  up: {
-    flex: 4,
-    backgroundColor: 'yellow'
+  inputContainer: {
+    borderBottomColor: '#F5FCFF',
+    backgroundColor: '#FFFFFF',
+    borderRadius:30,
+    borderBottomWidth: 1,
+    width:250,
+    height:45,
+    marginBottom:20,
+    flexDirection: 'row',
+    alignItems:'center',
+    marginTop: 10,
   },
   logo: {
-    width: setWidth
+    width: setWidth,
+    marginBottom: 20,
   },
-  down: {
-    flex: 6,
-    backgroundColor: 'blue'
+  inputs:{
+    height:45,
+    marginLeft:16,
+    borderBottomColor: '#FFFFFF',
+    flex:1,
+  },
+  buttonContainer: {
+    height:45,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom:20,
+    width:250,
+    borderRadius:30,
+    marginTop: 10
+  },
+  loginButton: {
+    backgroundColor: "#00b5ec",
+  },
+  loginText: {
+    color: 'white',
   }
-
 })
 export default LoginComponent;
-                                                                                                        
-                                   
