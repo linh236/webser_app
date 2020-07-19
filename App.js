@@ -27,11 +27,11 @@ function MyTabs() {
           ),
         }}
       />
-      <Tab.Screen name="Settings" component={Setting} 
+      <Tab.Screen name="Settings" component={Setting}
          options={{
            tabBarLabel: 'Setting',
            tabBarIcon: ({ color, size }) => (
-           <Ionicons name="ios-home" color={color} size={size} />
+           <Ionicons name="ios-settings" color={color} size={size} />
           ),
         }}
       />
@@ -39,7 +39,7 @@ function MyTabs() {
          options={{
            tabBarLabel: 'Led',
            tabBarIcon: ({ color, size }) => (
-           <Ionicons name="ios-home" color={color} size={size} />
+           <Ionicons name="ios-contrast" color={color} size={size} />
           ),
         }}
       />
@@ -47,7 +47,7 @@ function MyTabs() {
          options={{
            tabBarLabel: 'Logout',
            tabBarIcon: ({ color, size }) => (
-           <Ionicons name="ios-home" color={color} size={size} />
+           <Ionicons name="ios-log-out" color={color} size={size} />
           ),
         }}
       />
@@ -70,13 +70,13 @@ function IsLogin() {
         options={{
            tabBarLabel: 'Login',
            tabBarIcon: ({ color, size }) => (
-           <Ionicons name="ios-home" color={color} size={size} />
+           <Ionicons name="ios-log-in" color={color} size={size} />
           ),
         }}
-      
+
        />
     </Tab.Navigator>
-  );    
+  );
 }
 const App: () => React$Node = () => {
   const [id, setId] = useState([]);

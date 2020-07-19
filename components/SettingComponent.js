@@ -29,7 +29,7 @@ function SettingComponent() {
   const [data, setData] = useState([]);
   const [id, setId] = useState();
   const [birth, setBirth] = useState();
-  const [date, setDate] = useState(new Date(1598051730000));
+  const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('date');
   const [show, setShow] = useState(false);
   const [name, setName] = useState();
