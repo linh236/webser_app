@@ -15,7 +15,8 @@ import {
   NativeModules,
   TouchableHighlight,
   ActivityIndicator,
-  Alert
+  Alert,
+  RefreshControl
 } from 'react-native';
 import TimePicker from 'react-native-simple-time-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -23,6 +24,7 @@ import moment from 'moment';
 moment.locale("vn");
 function LedComponent({ }) {
   const [isLoading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [data, setData] = useState([]);
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState('datetime');
@@ -46,6 +48,7 @@ function LedComponent({ }) {
   }, []);
   const fetchLeds = (value) => {
     let url = `https://linhser.herokuapp.com/api/led_status/${value}`;
+    console.log(url);
     fetch(url).then((response) => response.json())
       .then((json) => {
         setData(json.leds);
@@ -122,10 +125,25 @@ function LedComponent({ }) {
      SendDataApiTimer(name, column, timer)
    };
 
+   const wait = (timeout) => {
+    return new Promise(resolve => {
+        setTimeout(resolve, timeout);
+      });
+    }
+   const onRefresh = React.useCallback(() => {
+      setRefreshing(true);
+      fetchLeds(id);
+      wait(2000).then(() => setRefreshing(false));
+    }, []);
 
   return (
     <>
-      <ScrollView style={styles.ScrollView}>
+      <ScrollView style={styles.ScrollView}
+        contentContainerStyle={styles.scrollView}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View style={styles.MainTitle}><Text>BẢNG ĐIỀU KHIỂN</Text></View>
         <View style={styles.container}>
 
