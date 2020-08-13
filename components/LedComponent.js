@@ -48,7 +48,6 @@ function LedComponent({ }) {
   }, []);
   const fetchLeds = (value) => {
     let url = `https://linhser.herokuapp.com/api/led_status/${value}`;
-    console.log(url);
     fetch(url).then((response) => response.json())
       .then((json) => {
         setData(json.leds);
@@ -82,7 +81,7 @@ function LedComponent({ }) {
     }).then((response) => response.json())
       .then((data) => {
         // NativeModules.DevSettings.reload();
-        alert("Thanh cong");
+        Alert.alert("Thanh cong");
         fetchLeds(id);
       }).catch((err) => console.error(err))
   }
@@ -104,7 +103,7 @@ function LedComponent({ }) {
     }).then((response) => response.json())
       .then((data) => {
         // NativeModules.DevSettings.reload();
-        alert("Thanh cong");
+        Alert.alert("Thanh cong");
         fetchLeds(id);
       }).catch((err) => console.error(err))
   }
@@ -131,9 +130,15 @@ function LedComponent({ }) {
       });
     }
    const onRefresh = React.useCallback(() => {
-      setRefreshing(true);
-      fetchLeds(id);
-      wait(2000).then(() => setRefreshing(false));
+     AsyncStorage.getItem('id', (error, value) => {
+       if (value !== null) {
+         setId(value)
+         fetchLeds(value)
+       }
+     });
+     // fetchLeds(id);
+     setRefreshing(true);
+     wait(2000).then(() => setRefreshing(false));
     }, []);
 
   return (

@@ -12,7 +12,8 @@ import {
   Image,
   Dimensions,
   NativeModules,
-  TouchableHighlight
+  TouchableHighlight,
+  Alert
 } from 'react-native';
 import TimePicker from 'react-native-simple-time-picker';
 import AsyncStorage from '@react-native-community/async-storage';
@@ -37,12 +38,12 @@ function LoginComponent({ navigation }) {
       }).then((response) => response.json())
       .then((data) => {
         if(data['id'] != null){
-          alert('Login success');
+          Alert.alert('Đăng nhập thành công');
           AsyncStorage.setItem('id', JSON.stringify(data['id']));
           NativeModules.DevSettings.reload();
          // navigation.navigate('Home');
         }else{
-          alert('Login failed');
+          Alert.alert('Đăng nhập thất bại');
         }
       }).catch((err) => console.error(err))
   }

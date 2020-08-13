@@ -15,7 +15,8 @@ import {
   NativeModules,
   TouchableHighlight,
   ActivityIndicator,
-  Alert
+  Alert,
+  RefreshControl
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -24,8 +25,14 @@ import moment from 'moment';
 const dimensions = Dimensions.get('window');
 const setHeight = Math.round(dimensions.width * 9 / 16);
 const setWidth = dimensions.width;
+const wait = (timeout) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout);
+  });
+}
 function SettingComponent() {
   const [isLoading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = React.useState(false);
   const [data, setData] = useState([]);
   const [id, setId] = useState();
   const [birth, setBirth] = useState();
@@ -122,10 +129,24 @@ function SettingComponent() {
         }
       }).catch((err) => console.error(err))
   }
+  const onRefresh = React.useCallback(() => {
+    AsyncStorage.getItem('id', (error, value) => {
+      if (value !== null) {
+        getInfo(value)
+      }
+    });
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
     return (
     <>
     {isLoading ? <ActivityIndicator /> : (
-      <ScrollView>
+      <ScrollView
+        contentContainerStyle={styles.scrollView}
+        refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+       }
+      >
       <Button
       title="Cập nhận thông tin cá nhân"
       />
