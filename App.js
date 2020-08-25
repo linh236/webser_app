@@ -12,7 +12,7 @@ import Login from './components/LoginComponent';
 import Logout from './components/LogoutComponent';
 import Led from './components/LedComponent';
 import Service from './components/ServiceComponent';
-import Paytherent from './components/PaytherentComponent';
+import Feedback from './components/FeedbackComponent';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -53,9 +53,9 @@ function MyTabs() {
           ),
         }}
       />
-       <Tab.Screen name="Paytherent" component={Paytherent}
+       <Tab.Screen name="Feedback" component={Feedback}
          options={{
-           tabBarLabel: 'Paytherent',
+           tabBarLabel: 'Feedback',
            tabBarIcon: ({ color, size }) => (
            <Ionicons name="ios-card" color={color} size={size} />
           ),

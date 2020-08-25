@@ -15,17 +15,23 @@ import {
   TouchableHighlight,
   Alert
 } from 'react-native';
+import {
+  URL,
+} from './myconnect'
+
 import TimePicker from 'react-native-simple-time-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 const dimensions = Dimensions.get('window');
 const setHeight = Math.round(dimensions.width * 9 / 16);
-const setWidth = dimensions.width;
+const setWidth = dimensions.width; 
 function LoginComponent({ navigation }) {
   const [email, setEmail] = useState([]);
   const [password, setPassword] = useState([]);
   const [data, setData] = useState([]);
+  console.log(URL);
   const CheckLogin = (email, password) => {
-    fetch('https://linhser.herokuapp.com/api/account', {
+    const url = URL + '/api/account';
+    fetch(URL+'/api/account', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

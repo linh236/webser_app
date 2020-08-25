@@ -19,6 +19,10 @@ import {
   FlatList,
   RefreshControl
 } from 'react-native';
+import {
+  URL,
+} from './myconnect'
+
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -35,17 +39,19 @@ function ServiceComponent({navigation}) {
   const [isLoading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = React.useState(false);
   const [data, setData] = useState([]);
+  const [data1, setData1] = useState([]);
   const [amount, setAmount] = useState([]);
   const [error, setError] = useState('');
   useEffect(() => {
     AsyncStorage.getItem('id', (error, value) => {
       if (value !== null) {
         fetchUseServices(value)
+        fetchPaytheRent(value)
       }
     });
   }, []);
   const fetchUseServices = (value) => {
-    let url = `https://linhser.herokuapp.com/api/getUseServices/${value}`;
+    let url = URL+`/api/getUseServices/${value}`;
     fetch(url).then((response) => response.json())
       .then((json) => {
         if (json.status == 200) {
@@ -60,19 +66,32 @@ function ServiceComponent({navigation}) {
       })
       .finally(() => setLoading(false));
   }
+  const fetchPaytheRent = (value) => {
+    let url = URL+`/api/getPaytheRent/${value}`;
+    fetch(url).then((response) => response.json())
+      .then((json) => {
+        setData1(json.data);
+       })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => setLoading(false));
+  }
   const onRefresh = React.useCallback(() => {
     AsyncStorage.getItem('id', (error, value) => {
       if (value !== null) {
-        fetchUseServices(value)
+        fetchUseServices(value);
+        fetchPaytheRent(value);
       }
     });
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
   }, []);
+
   return (
    <>
     <Button
-      title="Dịch vụ đang sử dụng"
+      title="Dịch vụ đang sử dụng và tiền trọ"
       onPress={() =>
         navigation.navigate('Service')
       }
@@ -116,6 +135,41 @@ function ServiceComponent({navigation}) {
           )}
         />
       )}
+
+    </View>
+    <View style={styles.container}>
+      <View style={styles.contenttitle}>
+        <View style={styles.rowPaytherent}>
+          <Text style={styles.service_column}>Tháng</Text>
+        </View>
+        <View style={styles.rowPaytherent}>
+          <Text style={styles.service_column}>Tiền</Text>
+        </View>
+        <View style={styles.rowPaytherent}>
+          <Text style={styles.service_column}>Tình trạng</Text>
+        </View>
+      </View>
+      {isLoading ? <ActivityIndicator/> : (
+        <FlatList
+          data={data1}
+          keyExtractor={item => item.id.toString()}
+          renderItem={({ item }) => (
+            <>
+              <View style={styles.content}>
+                <View style={styles.rowPaytherent}>
+                  <Text style={styles.service_column}>{item.senddate}</Text>
+                </View>
+                <View style={styles.rowPaytherent}>
+                  <Text style={styles.service_column}>{item.money}</Text>
+                </View>
+                <View style={styles.rowPaytherent}>
+                  <Text style={styles.service_column}>{item.status == 1 ? 'đã' : 'chưa'}</Text>
+                </View>
+              </View>
+            </>
+          )}
+        />
+      )}
     </View>
     </ScrollView>
    </>
@@ -140,7 +194,11 @@ const styles = StyleSheet.create({
   service_column: {
     textAlign: 'center',
     fontSize: 18
-  }
+  },
+  rowPaytherent: {
+    flex: 1,
+    // backgroundColor: 'blue',
+  },
 
 })
 export default ServiceComponent;

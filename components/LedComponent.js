@@ -18,6 +18,10 @@ import {
   Alert,
   RefreshControl
 } from 'react-native';
+import {
+  URL,
+} from './myconnect'
+import Voice from '@react-native-community/voice';
 import TimePicker from 'react-native-simple-time-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
@@ -47,7 +51,7 @@ function LedComponent({ }) {
     });
   }, []);
   const fetchLeds = (value) => {
-    let url = `https://linhser.herokuapp.com/api/led_status/${value}`;
+    let url = URL+`/api/led_status/${value}`;
     fetch(url).then((response) => response.json())
       .then((json) => {
         setData(json.leds);
@@ -65,7 +69,7 @@ function LedComponent({ }) {
     } else {
       SetStatus = "OFF";
     }
-    let url_send_data = `https://linhser.herokuapp.com/api/app_send/${id}`;
+    let url_send_data = URL+`/api/app_send/${id}`;
     fetch(url_send_data, {
       method: 'POST',
       headers: {
@@ -87,7 +91,7 @@ function LedComponent({ }) {
   }
   const SendDataApiTimer = (name, column, status) => {
     // status the same timer
-    let url_send_data = `https://linhser.herokuapp.com/api/app_send/${id}`;
+    let url_send_data = URL+`/api/app_send/${id}`;
     fetch(url_send_data, {
       method: 'POST',
       headers: {
@@ -162,8 +166,6 @@ function LedComponent({ }) {
                 <Text style={styles.TitleName}>Den So 4 </Text>
                 <Text style={styles.TitleName}>Den So 5 </Text>
                 <Text style={styles.TitleName}>Den So 6 </Text>
-                <Text style={styles.TitleName}>Den So 7 </Text>
-                <Text style={styles.TitleName}>Den So 8 </Text>
 
               </View>
               <View style={styles.second}>
@@ -171,13 +173,6 @@ function LedComponent({ }) {
                 <TouchableOpacity onPress={() => SendDataApi("LED_STATUS0", "STATUS", data['LED_STATUS0']['STATUS'])}>
                   <Text style={styles.TitleStatus}>{data['LED_STATUS0']['STATUS']}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => SendDataApi("LED_STATUS1", "STATUS", data['LED_STATUS1']['STATUS'])}>
-                  <Text style={styles.TitleStatus}>{data['LED_STATUS1']['STATUS']}</Text>
-                </TouchableOpacity >
-                <TouchableOpacity onPress={() => SendDataApi("LED_STATUS2", "STATUS", data['LED_STATUS2']['STATUS'])}>
-                  <Text style={styles.TitleStatus}>{data['LED_STATUS2']['STATUS']}</Text>
-                </TouchableOpacity>
-
                 <TouchableOpacity onPress={() => SendDataApi("LED_STATUS3", "STATUS", data['LED_STATUS3']['STATUS'])}>
                   <Text style={styles.TitleStatus}>{data['LED_STATUS3']['STATUS']}</Text>
                 </TouchableOpacity>
@@ -203,12 +198,6 @@ function LedComponent({ }) {
                 <TouchableOpacity onPress={() => showDatePicker('LED_STATUS0', 'TURNON')}>
                   <Text style={styles.TitleTurnon}>{data['LED_STATUS0']['TURNON']}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS1', 'TURNON')}>
-                  <Text style={styles.TitleTurnon}>{data['LED_STATUS1']['TURNON']}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS2', 'TURNON')}>
-                  <Text style={styles.TitleTurnon}>{data['LED_STATUS2']['TURNON']}</Text>
-                </TouchableOpacity>
                 <TouchableOpacity onPress={() => showDatePicker('LED_STATUS3', 'TURNON')}>
                   <Text style={styles.TitleTurnon}>{data['LED_STATUS3']['TURNON']}</Text>
                 </TouchableOpacity>
@@ -230,12 +219,6 @@ function LedComponent({ }) {
                 <Text style={styles.Title}>Timeout</Text>
                 <TouchableOpacity onPress={() => showDatePicker('LED_STATUS0', 'TURNOFF')}>
                   <Text style={styles.TitleTurnoff}>{data['LED_STATUS0']['TURNOFF']}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS1', 'TURNOFF')}>
-                  <Text style={styles.TitleTurnoff}>{data['LED_STATUS1']['TURNOFF']}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS2', 'TURNOFF')}>
-                  <Text style={styles.TitleTurnoff}>{data['LED_STATUS2']['TURNOFF']}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => showDatePicker('LED_STATUS3', 'TURNOFF')}>
                   <Text style={styles.TitleTurnoff}>{data['LED_STATUS3']['TURNOFF']}</Text>

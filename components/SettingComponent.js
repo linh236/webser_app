@@ -18,6 +18,10 @@ import {
   Alert,
   RefreshControl
 } from 'react-native';
+import {
+  URL,
+} from './myconnect'
+
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -58,7 +62,7 @@ function SettingComponent() {
     });
   }, []);
   const getInfo = (value) => {
-    let url = `https://linhser.herokuapp.com/api/getinfo/${value}`;
+    let url = URL+`/api/getinfo/${value}`;
     fetch(url).then((response) => response.json())
       .then((json) => {
         setData(json.data);
@@ -100,8 +104,9 @@ function SettingComponent() {
     showMode('time');
   };
 
-  const CheckLogin = () => {
-    let url = `https://linhser.herokuapp.com/api/updateInfo/${id}`;
+  const CheckUpdate = () => {
+    let url = URL+`/api/updateInfo/${id}`;
+    console.log();
     fetch(url, {
       method: 'POST',
       headers: {
@@ -111,7 +116,7 @@ function SettingComponent() {
       body:JSON.stringify ({
         name: name,
         birth: birth,
-        indentify: indentify,
+        indentifycard: indentify,
         daterange: daterange,
         placerange: placerange,
         phone1: phone1,
@@ -298,7 +303,7 @@ function SettingComponent() {
             </Ionicons>
           </View>
           <Text style={styles.note_warning}>Chú ý: Trường hợp (*) nếu sai liên hệ với quản lý để cập nhật lại thông tin.</Text>
-          <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={()=>CheckLogin()}>
+          <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={()=>CheckUpdate()}>
             <Text style={styles.loginText}>Lưu</Text>
           </TouchableOpacity>
         </View>
