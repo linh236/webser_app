@@ -66,6 +66,19 @@ function FeedbackComponent({navigation}) {
   }
   const Feedback = () => {
     const url = URL + '/api/reports';
+    if (!title || !content) {
+      Alert.alert(
+        'Cảnh báo',
+        'Nội dung không được để trống',
+        [
+          {
+            text: "Ok",
+            onPress: () => console.log("Ask me later pressed")
+          },
+        ]
+      );
+      return false;
+    }
     fetch(url, {
       method: 'POST',
       headers: {
@@ -95,8 +108,8 @@ function FeedbackComponent({navigation}) {
             json.data['rep_content'],
            [
              {
-               text: "Ok",
-               onPress: () => console.log("Ask me later pressed")
+               text: "Xóa",
+               onPress: () => deletefeedback(json.data['id'])
              },
              {
                text: "Hủy",
@@ -111,10 +124,28 @@ function FeedbackComponent({navigation}) {
       })
       .finally(() => setLoading(false));
   }
+
+  const deletefeedback =(id) => {
+    let url = URL+`/api/reports/${id}`;
+    fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-type': 'application/json'
+      },
+      }).then((response) => response.json())
+      .then((data) => {
+        if(data['status'] == 200){
+          Alert.alert("Xóa thành công.")
+        }else{
+          Alert.alert("Xóa thất bại.")
+        }
+      }).catch((err) => console.error(err))
+  }
   const onRefresh = React.useCallback(() => {
     AsyncStorage.getItem('id', (error, value) => {
       if (value !== null) {
-
+        getFeedback(value)
       }
     });
     setRefreshing(true);
@@ -158,7 +189,7 @@ function FeedbackComponent({navigation}) {
       </View>
     </View>
     <TouchableOpacity style={styles.ButtonFeedback} onPress={()=>Feedback()}>
-      <Text style={styles.IconSend}><Ionicons style={styles.IconSend} name="ios-settings"/>Gửi</Text>
+      <Text style={styles.IconSend}><Ionicons style={styles.IconSend} name="ios-send"/>Gửi</Text>
     </TouchableOpacity>
 
     <View style={styles.container_feedback}>
@@ -259,6 +290,13 @@ const styles = StyleSheet.create({
  },
  feedback_text: {
    textAlign: 'center'
+ },
+ IconSend: {
+   textAlign: 'center',
+   fontSize: 23,
+   margin: 10,
+ },
+ ButtonFeedback: {
  }
 })
 export default FeedbackComponent;

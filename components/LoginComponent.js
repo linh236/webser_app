@@ -23,7 +23,7 @@ import TimePicker from 'react-native-simple-time-picker';
 import AsyncStorage from '@react-native-community/async-storage';
 const dimensions = Dimensions.get('window');
 const setHeight = Math.round(dimensions.width * 9 / 16);
-const setWidth = dimensions.width; 
+const setWidth = dimensions.width;
 function LoginComponent({ navigation }) {
   const [email, setEmail] = useState([]);
   const [password, setPassword] = useState([]);
@@ -44,6 +44,10 @@ function LoginComponent({ navigation }) {
       }).then((response) => response.json())
       .then((data) => {
         if(data['id'] != null){
+          if(data['disable'] == 1){
+            Alert.alert('Tài khoản đã bị khóa');
+            return false;
+          }
           Alert.alert('Đăng nhập thành công');
           AsyncStorage.setItem('id', JSON.stringify(data['id']));
           NativeModules.DevSettings.reload();
