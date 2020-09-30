@@ -28,7 +28,6 @@ function LoginComponent({ navigation }) {
   const [email, setEmail] = useState([]);
   const [password, setPassword] = useState([]);
   const [data, setData] = useState([]);
-  console.log(URL);
   const CheckLogin = (email, password) => {
     const url = URL + '/api/account';
     fetch(URL+'/api/account', {

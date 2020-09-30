@@ -124,7 +124,7 @@ function LedComponent({ }) {
 
    const handleConfirm = (datetime) => {
      setDatePickerVisibility(false);
-     const timer = moment(datetime).format('Y-MM-DD HH:ss')
+     const timer = moment(datetime).format('Y-MM-DD HH:mm')
      SendDataApiTimer(name, column, timer)
    };
 
@@ -166,12 +166,20 @@ function LedComponent({ }) {
                 <Text style={styles.TitleName}>Den So 4 </Text>
                 <Text style={styles.TitleName}>Den So 5 </Text>
                 <Text style={styles.TitleName}>Den So 6 </Text>
+                <Text style={styles.TitleName}>Den So 7 </Text>
+                <Text style={styles.TitleName}>Den So 8 </Text>
 
               </View>
               <View style={styles.second}>
                 <Text style={styles.Title}>Status</Text>
                 <TouchableOpacity onPress={() => SendDataApi("LED_STATUS0", "STATUS", data['LED_STATUS0']['STATUS'])}>
                   <Text style={styles.TitleStatus}>{data['LED_STATUS0']['STATUS']}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => SendDataApi("LED_STATUS1", "STATUS", data['LED_STATUS1']['STATUS'])}>
+                  <Text style={styles.TitleStatus}>{data['LED_STATUS1']['STATUS']}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => SendDataApi("LED_STATUS2", "STATUS", data['LED_STATUS2']['STATUS'])}>
+                  <Text style={styles.TitleStatus}>{data['LED_STATUS2']['STATUS']}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => SendDataApi("LED_STATUS3", "STATUS", data['LED_STATUS3']['STATUS'])}>
                   <Text style={styles.TitleStatus}>{data['LED_STATUS3']['STATUS']}</Text>
@@ -198,6 +206,12 @@ function LedComponent({ }) {
                 <TouchableOpacity onPress={() => showDatePicker('LED_STATUS0', 'TURNON')}>
                   <Text style={styles.TitleTurnon}>{data['LED_STATUS0']['TURNON']}</Text>
                 </TouchableOpacity>
+                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS1', 'TURNON')}>
+                  <Text style={styles.TitleTurnon}>{data['LED_STATUS1']['TURNON']}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS2', 'TURNON')}>
+                  <Text style={styles.TitleTurnon}>{data['LED_STATUS2']['TURNON']}</Text>
+                </TouchableOpacity>
                 <TouchableOpacity onPress={() => showDatePicker('LED_STATUS3', 'TURNON')}>
                   <Text style={styles.TitleTurnon}>{data['LED_STATUS3']['TURNON']}</Text>
                 </TouchableOpacity>
@@ -219,6 +233,12 @@ function LedComponent({ }) {
                 <Text style={styles.Title}>Timeout</Text>
                 <TouchableOpacity onPress={() => showDatePicker('LED_STATUS0', 'TURNOFF')}>
                   <Text style={styles.TitleTurnoff}>{data['LED_STATUS0']['TURNOFF']}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS1', 'TURNOFF')}>
+                  <Text style={styles.TitleTurnoff}>{data['LED_STATUS1']['TURNOFF']}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS2', 'TURNOFF')}>
+                  <Text style={styles.TitleTurnoff}>{data['LED_STATUS2']['TURNOFF']}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={() => showDatePicker('LED_STATUS3', 'TURNOFF')}>
                   <Text style={styles.TitleTurnoff}>{data['LED_STATUS3']['TURNOFF']}</Text>
