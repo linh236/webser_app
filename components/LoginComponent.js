@@ -21,14 +21,55 @@ import {
 
 import TimePicker from 'react-native-simple-time-picker';
 import AsyncStorage from '@react-native-community/async-storage';
+import TimedSlideshow from 'react-native-timed-slideshow';
 const dimensions = Dimensions.get('window');
 const setHeight = Math.round(dimensions.width * 9 / 16);
 const setWidth = dimensions.width;
 function LoginComponent({ navigation }) {
+  const items = [
+           {
+               uri: "http://www.lovethemountains.co.uk/wp-content/uploads/2017/05/New-Outdoor-Sports-and-Music-Festival-For-Wales-4.jpg",
+               title: "Michael Malik",
+               text: "Minnesota, USA",
+               duration: 3000,
+           },
+           {
+               uri: "http://blog.adrenaline-hunter.com/wp-content/uploads/2018/05/bungee-jumping-barcelona-1680x980.jpg",
+               title: "Victor Fallon",
+               text: "Val di Sole, Italy",
+               duration: 3000,
+               slideDirection: 'odd'
+           },
+           {
+               uri: "https://greatist.com/sites/default/files/Running_Mountain.jpg",
+               title: "Mary Gomes",
+               text: "Alps",
+               fullWidth: true,
+               duration: 3000,
+           }
+       ];
   const [email, setEmail] = useState([]);
   const [password, setPassword] = useState([]);
   const [data, setData] = useState([]);
   const CheckLogin = (email, password) => {
+    if (email == "" || password == "") {
+      return false;
+    }else{
+       let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      if (reg.test(email) == false) {
+        Alert.alert(
+          'Cảnh báo',
+          'Email khong dung dinh dang',
+          [
+            {
+              text: "Ok",
+              onPress: () => console.log("Ask me later pressed")
+            },
+          ]
+        );
+        return false;
+      }
+    }
     const url = URL + '/api/account';
     fetch(URL+'/api/account', {
       method: 'POST',
@@ -67,12 +108,16 @@ function LoginComponent({ navigation }) {
     });
   }
 
+  // <Image source={require('../images/img2.jpeg')}
+  // style = {styles.logo}
+  // />
 return (
    <>
     <ScrollView>
     <View style={styles.up}>
-      <Image source={require('../images/bk.jpeg')}
-      style = {styles.logo}
+      <TimedSlideshow
+      style={styles.timeslider}
+      items={items}
       />
     </View>
     <View style={styles.container}>
@@ -142,6 +187,13 @@ const styles = StyleSheet.create({
   },
   loginText: {
     color: 'white',
-  }
+  },
+  up: {
+    flex: 1,
+    flexDirection: 'column',
+    height: setHeight*2.5+50,
+    marginBottom: 15,
+  },
+
 })
 export default LoginComponent;

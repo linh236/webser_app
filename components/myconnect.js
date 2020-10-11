@@ -1,2 +1,2 @@
-export const URL = 'https://linhser.herokuapp.com'
-// export const URL = 'https://c8d7555036f2.ngrok.io'
+// export const URL = 'https://linhser.herokuapp.com'
+export const URL = 'https://64f4f5e6cfec.ngrok.io'
