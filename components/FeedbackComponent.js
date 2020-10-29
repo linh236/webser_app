@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
 import Textarea from 'react-native-textarea';
+import { Table, Row, Rows } from 'react-native-table-component';
 import {
   SafeAreaView,
   StyleSheet,
@@ -45,6 +46,9 @@ function FeedbackComponent({navigation}) {
   const [error, setError] = useState('');
   const [data, setData] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [tableData, setTableData] = useState([]);
+  const [tableHead] = useState(['Order', 'Title','Content', 'Status']);
+
   useEffect(() => {
     AsyncStorage.getItem('id', (error, value) => {
       if (value !== null) {
@@ -58,6 +62,12 @@ function FeedbackComponent({navigation}) {
     fetch(url).then((response) => response.json())
       .then((json) => {
         setData(json.data);
+        let arrayDataFeedback = [];
+        json.data.map((key,value)=> {
+          arrayDataFeedback.push([touchable_popup(key.id,value), touchable_popup(key.id,key.title),  touchable_popup(key.id,key.content),  touchable_popup(key.id,key.mark == 0 ? "No":"Yes")])
+        })
+        setTableData(arrayDataFeedback);
+
       })
       .catch((error) => {
         console.error(error);
@@ -68,12 +78,12 @@ function FeedbackComponent({navigation}) {
     const url = URL + '/api/reports';
     if (!title || !content) {
       Alert.alert(
-        'Cảnh báo',
-        'Nội dung không được để trống',
+        'Warning',
+        'Content or Title is blank',
         [
           {
             text: "Ok",
-            onPress: () => console.log("Ask me later pressed")
+            onPress: () => console.log("Enter title or content")
           },
         ]
       );
@@ -93,9 +103,12 @@ function FeedbackComponent({navigation}) {
       }).then((response) => response.json())
       .then((data) => {
         if(data['status']){
-          Alert.alert("Phản hồi thành công.")
+          getFeedback(id);
+          setTitle('');
+          setContent('');
+          Alert.alert("Feedback successfully.")
         }else{
-          Alert.alert("Phản hồi thất bại. Xin vui lòng gửi lại.")
+          Alert.alert("Failed to respond. Please resend.")
         }
       }).catch((err) => console.error(err))
   }
@@ -105,16 +118,15 @@ function FeedbackComponent({navigation}) {
       .then((json) => {
           Alert.alert(
             json.data['title'],
-            json.data['rep_content'],
+            json.data['rep_content'] == null ? "The manager has not responded to your message" : json.data['rep_content'],
            [
              {
-               text: "Xóa",
+               text: "Delete",
                onPress: () => deletefeedback(json.data['id'])
              },
              {
-               text: "Hủy",
+               text: "Cancel",
                onPress: () => console.log("Cancel Pressed"),
-               style: "cancel"
              },
            ]
           )
@@ -136,9 +148,13 @@ function FeedbackComponent({navigation}) {
       }).then((response) => response.json())
       .then((data) => {
         if(data['status'] == 200){
-          Alert.alert("Xóa thành công.")
+          AsyncStorage.getItem('id', (error, value) => {
+            if (value !== null) {
+              getFeedback(value)
+            }
+          });
         }else{
-          Alert.alert("Xóa thất bại.")
+          Alert.alert("Deleted Failed.")
         }
       }).catch((err) => console.error(err))
   }
@@ -152,10 +168,23 @@ function FeedbackComponent({navigation}) {
     wait(2000).then(() => setRefreshing(false));
   }, []);
 
+  const touchable_popup = (id, title) => {
+    return(
+      <>
+        <TouchableOpacity onPress={()=> showpopup(id)}>
+          <View style={styles.contenttitlefeedback}>
+            <View style={styles.rowFeedback}>
+              <Text style={styles.feedback_text}>{title}</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </>
+    )
+  }
   return (
    <>
     <Button
-      title="Phản hồi thông tin"
+      title="Feedback information"
       onPress={() =>
         navigation.navigate('Service')
       }
@@ -169,64 +198,37 @@ function FeedbackComponent({navigation}) {
 
     <View style={styles.container}>
       <View style={styles.titleFeedback}>
-        <Text style={styles.title}>Tiêu đề</Text>
+        <Text style={styles.title}>Title</Text>
         <TextInput
           style={styles.inputFeedback}
+          value={title}
           onChangeText={text=>setTitle(text)}
         />
       </View>
       <View style={styles.titleFeedback}>
-        <Text style={styles.title}>Nội dung</Text>
+        <Text style={styles.title}>Content</Text>
         <Textarea
           containerStyle={styles.textareaContainer}
           style={styles.textarea}
           maxLength={200}
-          placeholder={'Nhập nội dung phản hồi 。。。'}
+          value={content}
+          placeholder={'Enter content 。。。'}
           placeholderTextColor={'#c7c7c7'}
           underlineColorAndroid={'transparent'}
           onChangeText={text=>setContent(text)}
         />
       </View>
     </View>
-    <TouchableOpacity style={styles.ButtonFeedback} onPress={()=>Feedback()}>
-      <Text style={styles.IconSend}><Ionicons style={styles.IconSend} name="ios-send"/>Gửi</Text>
-    </TouchableOpacity>
 
-    <View style={styles.container_feedback}>
-      <View style={styles.contenttitlefeedback}>
-        <View style={styles.rowFeedback}>
-          <Text style={styles.feedback_text}>Tiêu đề</Text>
-        </View>
-        <View style={styles.rowFeedback}>
-          <Text style={styles.feedback_text}>Nội dung</Text>
-        </View>
-        <View style={styles.rowFeedback}>
-          <Text style={styles.feedback_text}>Phản hồi</Text>
-        </View>
-      </View>
-      {isLoading ? <ActivityIndicator/> : (
-        <FlatList
-          data={data}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({ item,i=0 }) => (
-            <>
-              <TouchableOpacity onPress={()=> showpopup(item.id)}>
-                <View style={styles.contenttitlefeedback}>
-                  <View style={styles.rowFeedback}>
-                    <Text style={styles.feedback_text}>{item.title}</Text>
-                  </View>
-                  <View style={styles.rowFeedback}>
-                    <Text style={styles.feedback_text}>{item.content}</Text>
-                  </View>
-                  <View style={styles.rowFeedback}>
-                    <Text style={styles.feedback_text}>{item.mark == 1 ? "Rồi" : "Chưa"}</Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </>
-          )}
-        />
-      )}
+    <TouchableOpacity style={styles.ButtonFeedback} onPress={()=>Feedback()}>
+      <Text style={styles.IconSend}><Ionicons style={styles.IconSend} name="ios-send"/>Send</Text>
+    </TouchableOpacity>
+    <View style={styles.container}>
+        <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
+          <Row data={['Feedback list']} style={styles.head} textStyle={styles.text}/>
+          <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
+          <Rows data={tableData} textStyle={styles.text}/>
+        </Table>
     </View>
     </ScrollView>
    </>
@@ -250,7 +252,7 @@ const styles = StyleSheet.create({
   inputFeedback: {
     width: setWidth-85,
     backgroundColor: '#F5FCFF',
-    marginLeft: 18,
+    marginLeft: 32,
     marginBottom: 10,
     padding: 10
   },
@@ -297,6 +299,16 @@ const styles = StyleSheet.create({
    margin: 10,
  },
  ButtonFeedback: {
+ },
+ head: {
+   height: 40,
+   backgroundColor: '#f1f8ff',
+   textAlign: 'center'
+ },
+ text: {
+   margin: 6 ,
+   textAlign: 'center'
  }
+
 })
 export default FeedbackComponent;

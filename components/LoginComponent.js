@@ -58,8 +58,8 @@ function LoginComponent({ navigation }) {
        let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
       if (reg.test(email) == false) {
         Alert.alert(
-          'Cảnh báo',
-          'Email khong dung dinh dang',
+          'Warning',
+          'Email invalidate',
           [
             {
               text: "Ok",
@@ -85,15 +85,15 @@ function LoginComponent({ navigation }) {
       .then((data) => {
         if(data['id'] != null){
           if(data['disable'] == 1){
-            Alert.alert('Tài khoản đã bị khóa');
+            Alert.alert('Your account is blocked');
             return false;
           }
-          Alert.alert('Đăng nhập thành công');
+          // Alert.alert('Đăng nhập thành công');
           AsyncStorage.setItem('id', JSON.stringify(data['id']));
           NativeModules.DevSettings.reload();
          // navigation.navigate('Home');
         }else{
-          Alert.alert('Đăng nhập thất bại');
+          Alert.alert('Login failed');
         }
       }).catch((err) => console.error(err))
   }

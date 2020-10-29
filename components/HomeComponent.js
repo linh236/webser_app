@@ -33,7 +33,6 @@ function HomeComponent({ navigation }) {
 
    const appSlider = () => {
      let url = URL + '/api/appSlider';
-     console.log(url);
      fetch(url).then((response) => response.json())
      .then((json) => {
        setSliders(json.slides);
@@ -48,7 +47,7 @@ function HomeComponent({ navigation }) {
      fetch(url).then((response) => response.json())
      .then((json) => {
        setRegulations(json.regulations);
-       setHouse('Quy định về ' + json.house_name);
+       setHouse('The regulations of ' + json.house_name);
      })
      .catch((error) => {
        console.error(error);
@@ -80,46 +79,33 @@ function HomeComponent({ navigation }) {
 
   const _renderItem = ({ item }) => {
     return (
-      <ScrollView
-        style={{backgroundColor: item.backgroundColor}}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <View style={[styles.slide, {backgroundColor: item.backgroundColor}]}>
-          <Text style={[styles.title, {color: item.textcolor}]}>
-            {item.title}
-          </Text>
-          <Image
-            style={styles.image}
-            source={{
-              uri: URL+item.image.url,
-            }}
-          />
-          <HTMLView
-            value={item.text}
-            stylesheet={styles}
-          />
-        </View>
-      </ScrollView>
+      <View style={[styles.slide, {backgroundColor: item.backgroundColor}]}>
+        <Text style={[styles.title, {color: item.textcolor}]}>
+          {item.title}
+        </Text>
+        <Image
+          style={styles.image}
+          source={{
+            uri: URL+item.image.url,
+          }}
+        />
+        <HTMLView
+          value={item.text}
+          stylesheet={styles}
+        />
+      </View>
     );
   }
 
-  const _renderRegulation = ({item, i = 1}) => {
+  const _renderRegulation = ({item}) => {
     return (
-      <ScrollView
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <View>
-          <Text>{[i++,". ", item.title]}</Text>
-          <HTMLView
-            value={item.description}
-          />
+      <View style={styles.regulations}>
+        <Text>{item.title}</Text>
+        <HTMLView
+          value={item.description}
+        />
 
-        </View>
-      </ScrollView>
+      </View>
     );
   }
 
@@ -130,6 +116,11 @@ function HomeComponent({ navigation }) {
 
   return (
    <>
+   <ScrollView
+     refreshControl={
+       <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+     }
+   >
     { id != null ?
       <>
         <Button
@@ -152,6 +143,7 @@ function HomeComponent({ navigation }) {
         onDone={_onDone}
         />
     }
+  </ScrollView>
    </>
  );
 }
@@ -179,5 +171,8 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
+  regulations: {
+    margin: 5,
+  }
 });
 export default HomeComponent;

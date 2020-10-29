@@ -17,7 +17,7 @@ import {
 
 function LogoutComponent({ navigation }) {
    AsyncStorage.removeItem('id');
-    alert('Đăng xuất thành công ');
+    alert('Logout successfully ');
     NativeModules.DevSettings.reload();
   return (
     <View><Text>Logout</Text></View>

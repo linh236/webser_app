@@ -106,7 +106,6 @@ function SettingComponent() {
 
   const CheckUpdate = () => {
     let url = URL+`/api/updateInfo/${id}`;
-    console.log();
     fetch(url, {
       method: 'POST',
       headers: {
@@ -127,9 +126,9 @@ function SettingComponent() {
       }).then((response) => response.json())
       .then((data) => {
         if (data['status']== '200') {
-          Alert.alert('Cập nhật thành công');
+          Alert.alert('Updated successfully');
         } else {
-          Alert.alert('Cập nhật thất bại');
+          Alert.alert('Updated failed');
 
         }
       }).catch((err) => console.error(err))
@@ -153,7 +152,7 @@ function SettingComponent() {
        }
       >
       <Button
-      title="Cập nhận thông tin cá nhân"
+      title="Information personal"
       />
       <View style={styles.container}>
           <Text>Email <Text style={styles.warning}>(*)</Text></Text>
@@ -169,10 +168,9 @@ function SettingComponent() {
             >
             </Ionicons>
           </View>
-          <Text>Họ và tên</Text>
+          <Text>Full name</Text>
           <View style={styles.inputContainer}>
             <TextInput style={styles.inputs}
-                placeholder="Name"
                 underlineColorAndroid='transparent'
                 value={name}
                 onChangeText={text=>setName(text)}/>
@@ -181,10 +179,9 @@ function SettingComponent() {
             >
             </FontAwesome>
           </View>
-          <Text>CMND</Text>
+          <Text>Indentify</Text>
           <View style={styles.inputContainer}>
             <TextInput style={styles.inputs}
-                placeholder="indentify"
                 keyboardType="numeric"
                 underlineColorAndroid='transparent'
                 value={indentify}
@@ -194,10 +191,9 @@ function SettingComponent() {
             >
             </Ionicons>
           </View>
-          <Text>Ngày cấp <Text style={styles.warning}>(*)</Text></Text>
+          <Text>Date range <Text style={styles.warning}>(*)</Text></Text>
           <View style={styles.inputContainer} pointerEvents="none">
           <TextInput style={styles.inputs}
-              placeholder="Ngày cấp CMND"
               underlineColorAndroid='transparent'
               value={daterange}
               onPress={showDatepicker}
@@ -210,10 +206,9 @@ function SettingComponent() {
           >
           </Ionicons>
           </View>
-          <Text>Nơi cấp <Text style={styles.warning}>(*)</Text></Text>
+          <Text>Place range <Text style={styles.warning}>(*)</Text></Text>
           <View style={styles.inputContainer} pointerEvents="none">
             <TextInput style={styles.inputs}
-                placeholder="Nơi cấp CMND"
                 underlineColorAndroid='transparent'
                 value={placerange}
                 onChangeText={text=>setPlacerange(text)}/>
@@ -222,11 +217,10 @@ function SettingComponent() {
             >
             </Ionicons>
           </View>
-          <Text>Ngày sinh</Text>
+          <Text>Birth</Text>
           <TouchableOpacity onPress={showDatepicker} style={styles.datetime}>
             <View style={styles.inputContainer} pointerEvents="none">
             <TextInput style={styles.inputs}
-                placeholder="Birth"
                 underlineColorAndroid='transparent'
                 value={birth}
                 onChangeText={text=>setBirth(text)}
@@ -239,10 +233,9 @@ function SettingComponent() {
             </Ionicons>
             </View>
           </TouchableOpacity>
-          <Text>Số điện thoại 1</Text>
+          <Text>Phone 1</Text>
           <View style={styles.inputContainer}>
             <TextInput style={styles.inputs}
-                placeholder="Số điện thoại 1"
                 underlineColorAndroid='transparent'
                 keyboardType="numeric"
                 value={phone1}
@@ -252,10 +245,9 @@ function SettingComponent() {
             >
             </FontAwesome>
           </View>
-          <Text>Số điện thoại 2</Text>
+          <Text>Phone 2</Text>
           <View style={styles.inputContainer}>
             <TextInput style={styles.inputs}
-                placeholder="Số điện thoại 2"
                 keyboardType="numeric"
                 underlineColorAndroid='transparent'
                 value={phone2}
@@ -265,10 +257,9 @@ function SettingComponent() {
             >
             </FontAwesome>
           </View>
-          <Text>Quê quán <Text style={styles.warning}>(*)</Text></Text>
+          <Text>Permanent <Text style={styles.warning}>(*)</Text></Text>
           <View style={styles.inputContainer} pointerEvents="none">
             <TextInput style={styles.inputs}
-                placeholder="Quê quán"
                 underlineColorAndroid='transparent'
                 value={permanent}
                 onChangeText={text=>setPermanent(text)}/>
@@ -277,10 +268,9 @@ function SettingComponent() {
             >
             </FontAwesome>
           </View>
-          <Text>Ghi chú</Text>
+          <Text>Note</Text>
           <View style={styles.inputContainer}>
             <TextInput style={styles.inputs}
-                placeholder="Ghi chú"
                 underlineColorAndroid='transparent'
                 value={note}
                 onChangeText={text=>setNote(text)}/>
@@ -289,10 +279,9 @@ function SettingComponent() {
             >
             </Ionicons>
           </View>
-          <Text>Ngày bắt đầu <Text style={styles.warning}>(*)</Text></Text>
+          <Text>Start<Text style={styles.warning}>(*)</Text></Text>
           <View style={styles.inputContainer} pointerEvents="none">
             <TextInput style={styles.inputs}
-                placeholder="Bắt đầu thuê"
                 keyboardType="numeric"
                 underlineColorAndroid='transparent'
                 value={start}
@@ -302,9 +291,9 @@ function SettingComponent() {
             >
             </Ionicons>
           </View>
-          <Text style={styles.note_warning}>Chú ý: Trường hợp (*) nếu sai liên hệ với quản lý để cập nhật lại thông tin.</Text>
+          <Text style={styles.note_warning}>Note: In case (*) if wrong, contact the manager to update information.</Text>
           <TouchableOpacity style={[styles.buttonContainer, styles.loginButton]} onPress={()=>CheckUpdate()}>
-            <Text style={styles.loginText}>Lưu</Text>
+            <Text style={styles.loginText}>Save</Text>
           </TouchableOpacity>
         </View>
         <View>
