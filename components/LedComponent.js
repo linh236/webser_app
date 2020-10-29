@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
+import { Table, Row, Rows } from 'react-native-table-component';
 import {
   SafeAreaView,
   StyleSheet,
   ScrollView,
   View,
   Text,
-  StatusBar,
+  statusBar,
   Button,
   TextInput,
   TouchableOpacity,
@@ -41,6 +42,9 @@ function LedComponent({ }) {
   const [chosenDatetime, setChosenDatetime ]= useState('');
   const [name, setName] = useState('');
   const [column, setColumn] = useState('');
+  const [tableHead] = useState(['Name', 'Status','Timer', 'Timeout']);
+  const [tableData, setTableData] = useState([]);
+
 
   useEffect(() => {
     AsyncStorage.getItem('id', (error, value) => {
@@ -54,7 +58,16 @@ function LedComponent({ }) {
     let url = URL+`/api/led_status/${value}`;
     fetch(url).then((response) => response.json())
       .then((json) => {
-        setData(json.leds);
+        setTableData([
+          [' Light 1', touchable_turn_on_off('led_status0','status',json.leds.led_status0.status), touchable_settimer('led_status0','turnon',json.leds.led_status0.turnon), touchable_settimer('led_status0','turnoff',json.leds.led_status0.turnoff) ],
+          [' Light 2', touchable_turn_on_off('led_status1','status',json.leds.led_status1.status), touchable_settimer('led_status1','turnon',json.leds.led_status1.turnon), touchable_settimer('led_status1','turnoff',json.leds.led_status1.turnoff) ],
+          [' Light 3', touchable_turn_on_off('led_status2','status',json.leds.led_status2.status), touchable_settimer('led_status2','turnon',json.leds.led_status2.turnon), touchable_settimer('led_status2','turnoff',json.leds.led_status2.turnoff) ],
+          [' Light 4', touchable_turn_on_off('led_status3','status',json.leds.led_status3.status), touchable_settimer('led_status3','turnon',json.leds.led_status3.turnon), touchable_settimer('led_status3','turnoff',json.leds.led_status3.turnoff) ],
+          [' Fan', touchable_turn_on_off('led_status5','status',json.leds.led_status5.status), touchable_settimer('led_status5','turnon',json.leds.led_status5.turnon), touchable_settimer('led_status5','turnoff',json.leds.led_status5.turnoff) ],
+          [' Power socket 1', touchable_turn_on_off('led_status6','status',json.leds.led_status6.status), touchable_settimer('led_status6','turnon',json.leds.led_status6.turnon), touchable_settimer('led_status6','turnoff',json.leds.led_status6.turnoff) ],
+          [' Power socket 2', touchable_turn_on_off('led_status7','status',json.leds.led_status7.status), touchable_settimer('led_status7','turnon',json.leds.led_status7.turnon), touchable_settimer('led_status7','turnoff',json.leds.led_status7.turnoff) ],
+          [' Power socket 3', touchable_turn_on_off('led_status8','status',json.leds.led_status8.status), touchable_settimer('led_status8','turnon',json.leds.led_status8.turnon), touchable_settimer('led_status8','turnoff',json.leds.led_status8.turnoff) ],
+        ])
       })
       .catch((error) => {
         console.error(error);
@@ -63,11 +76,11 @@ function LedComponent({ }) {
   }
   // Send data to api
   const SendDataApi = (name, column, status) => {
-    let SetStatus = '';
-    if (status == "OFF") {
-      SetStatus = "ON";
+    let Setstatus = '';
+    if (status == "off") {
+      Setstatus = "on";
     } else {
-      SetStatus = "OFF";
+      Setstatus = "off";
     }
     let url_send_data = URL+`/api/app_send/${id}`;
     fetch(url_send_data, {
@@ -79,13 +92,13 @@ function LedComponent({ }) {
       body: JSON.stringify({
         name: name,
         column: column,
-        status: SetStatus
+        status: Setstatus
 
       })
     }).then((response) => response.json())
       .then((data) => {
         // NativeModules.DevSettings.reload();
-        Alert.alert("Thanh cong");
+        // Alert.alert("Thanh cong");
         fetchLeds(id);
       }).catch((err) => console.error(err))
   }
@@ -124,7 +137,7 @@ function LedComponent({ }) {
 
    const handleConfirm = (datetime) => {
      setDatePickerVisibility(false);
-     const timer = moment(datetime).format('Y-MM-DD HH:ss')
+     const timer = moment(datetime).format('Y-MM-DD HH:mm')
      SendDataApiTimer(name, column, timer)
    };
 
@@ -145,6 +158,24 @@ function LedComponent({ }) {
      wait(2000).then(() => setRefreshing(false));
     }, []);
 
+  const touchable_turn_on_off = (name,column,status)=> {
+    return(
+      <TouchableOpacity onPress={() => SendDataApi(name,column,status)}>
+        <Text style={styles.Titlestatus}>{status}</Text>
+      </TouchableOpacity>
+    )
+  }
+
+  const touchable_settimer = (name, column,status) => {
+    // name: led_status0
+    // column: 'turnon'
+    // status: value turnon or turnoff
+    return(
+      <TouchableOpacity onPress={() => showDatePicker(name, column)}>
+        <Text style={styles.TitleTurnoff}>{status}</Text>
+      </TouchableOpacity>
+    )
+  }
   return (
     <>
       <ScrollView style={styles.ScrollView}
@@ -153,89 +184,16 @@ function LedComponent({ }) {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <View style={styles.MainTitle}><Text>BẢNG ĐIỀU KHIỂN</Text></View>
+        <View style={styles.MainTitle}><Text>DASHBOARD</Text></View>
         <View style={styles.container}>
 
           {isLoading ? <ActivityIndicator /> : (
             <>
-              <View style={styles.first}>
-                <Text style={styles.Title}>Name</Text>
-                <Text style={styles.TitleName}>Den So 1</Text>
-                <Text style={styles.TitleName}>Den So 2 </Text>
-                <Text style={styles.TitleName}>Den So 3 </Text>
-                <Text style={styles.TitleName}>Den So 4 </Text>
-                <Text style={styles.TitleName}>Den So 5 </Text>
-                <Text style={styles.TitleName}>Den So 6 </Text>
-
-              </View>
-              <View style={styles.second}>
-                <Text style={styles.Title}>Status</Text>
-                <TouchableOpacity onPress={() => SendDataApi("LED_STATUS0", "STATUS", data['LED_STATUS0']['STATUS'])}>
-                  <Text style={styles.TitleStatus}>{data['LED_STATUS0']['STATUS']}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => SendDataApi("LED_STATUS3", "STATUS", data['LED_STATUS3']['STATUS'])}>
-                  <Text style={styles.TitleStatus}>{data['LED_STATUS3']['STATUS']}</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => SendDataApi("LED_STATUS5", "STATUS", data['LED_STATUS5']['STATUS'])}>
-                  <Text style={styles.TitleStatus}>{data['LED_STATUS5']['STATUS']}</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => SendDataApi("LED_STATUS6", "STATUS", data['LED_STATUS6']['STATUS'])}>
-                  <Text style={styles.TitleStatus}>{data['LED_STATUS6']['STATUS']}</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => SendDataApi("LED_STATUS7", "STATUS", data['LED_STATUS7']['STATUS'])}>
-                  <Text style={styles.TitleStatus}>{data['LED_STATUS7']['STATUS']}</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => SendDataApi("LED_STATUS8", "STATUS", data['LED_STATUS8']['STATUS'])}>
-                  <Text style={styles.TitleStatus}>{data['LED_STATUS8']['STATUS']}</Text>
-                </TouchableOpacity>
-              </View>
-              <View style={styles.third}>
-                <Text style={styles.Title}>Timer</Text>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS0', 'TURNON')}>
-                  <Text style={styles.TitleTurnon}>{data['LED_STATUS0']['TURNON']}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS3', 'TURNON')}>
-                  <Text style={styles.TitleTurnon}>{data['LED_STATUS3']['TURNON']}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS5', 'TURNON')}>
-                  <Text style={styles.TitleTurnon}>{data['LED_STATUS5']['TURNON']}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS6', 'TURNON')}>
-                  <Text style={styles.TitleTurnon}>{data['LED_STATUS6']['TURNON']}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS7', 'TURNON')}>
-                  <Text style={styles.TitleTurnon}>{data['LED_STATUS7']['TURNON']}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS8', 'TURNON')}>
-                  <Text style={styles.TitleTurnon}>{data['LED_STATUS8']['TURNON']}</Text>
-                </TouchableOpacity>
-
-              </View>
-              <View style={styles.fourth}>
-                <Text style={styles.Title}>Timeout</Text>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS0', 'TURNOFF')}>
-                  <Text style={styles.TitleTurnoff}>{data['LED_STATUS0']['TURNOFF']}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS3', 'TURNOFF')}>
-                  <Text style={styles.TitleTurnoff}>{data['LED_STATUS3']['TURNOFF']}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS5', 'TURNOFF')}>
-                  <Text style={styles.TitleTurnoff}>{data['LED_STATUS5']['TURNOFF']}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS6', 'TURNOFF')}>
-                  <Text style={styles.TitleTurnoff}>{data['LED_STATUS6']['TURNOFF']}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS7', 'TURNOFF')}>
-                  <Text style={styles.TitleTurnoff}>{data['LED_STATUS7']['TURNOFF']}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => showDatePicker('LED_STATUS8', 'TURNOFF')}>
-                  <Text style={styles.TitleTurnoff}>{data['LED_STATUS8']['TURNOFF']}</Text>
-                </TouchableOpacity>
-
+              <View style={styles.container}>
+                <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
+                  <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
+                  <Rows data={tableData} textStyle={styles.text}/>
+                </Table>
               </View>
             </>
           )}
@@ -303,7 +261,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
   },
-  TitleStatus: {
+  Titlestatus: {
     textAlign: 'center',
     marginTop: 20,
     marginBottom: 20,
@@ -319,5 +277,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
 
   },
+  container: {
+    flex: 1,
+    padding: 2,
+    backgroundColor: '#fff'
+  },
+ head: {
+   height: 40,
+   backgroundColor: '#f1f8ff'
+ },
+ text: {
+   margin: 6 ,
+   textAlign: 'center'
+ }
 
 });

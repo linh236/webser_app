@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-community/async-storage';
+import { Table, Row, Rows } from 'react-native-table-component';
 import {
   SafeAreaView,
   StyleSheet,
@@ -42,6 +43,10 @@ function ServiceComponent({navigation}) {
   const [data1, setData1] = useState([]);
   const [amount, setAmount] = useState([]);
   const [error, setError] = useState('');
+  const [tableHeadService] = useState([ 'Order', 'Service','Cost(VND)', 'Amount']);
+  const [tableDataService, setTableDataService] = useState([]);
+  const [tableHead] = useState([ 'Order', 'Month','Money', 'Status']);
+  const [tableData, setTableData] = useState([]);
   useEffect(() => {
     AsyncStorage.getItem('id', (error, value) => {
       if (value !== null) {
@@ -57,8 +62,19 @@ function ServiceComponent({navigation}) {
         if (json.status == 200) {
           setData(json.data);
           setAmount(json.service_amount);
+          let arrayDateTableService = [];
+          let arrayDateTableServiceafter = [];
+          // json.data.map((key,value) => {
+          //   arrayDateTableService.push(key.name, key.cost, json.service_amount[value]);
+          //   arrayDateTableServiceafter.push(arrayDateTableService);
+          // })
+          json.data.map((key,value) => {
+            arrayDateTableService.push([value, key.name, key.cost, json.service_amount[value]])
+          })
+          // setTableDataService([]);
+          setTableDataService(arrayDateTableService);
         } else {
-          setError("Bạn chưa đăng ký dịch vụ")
+          setError("You have not registered for the service")
         }
       })
       .catch((error) => {
@@ -70,7 +86,11 @@ function ServiceComponent({navigation}) {
     let url = URL+`/api/getPaytheRent/${value}`;
     fetch(url).then((response) => response.json())
       .then((json) => {
-        setData1(json.data);
+        let arrayDataTable = [];
+        json.data.map((key,value) => {
+          arrayDataTable.push([value,key.senddate, key.money, key.status == 1 ? "Yes" : "No"])
+        })
+        setTableData(arrayDataTable)
        })
       .catch((error) => {
         console.error(error);
@@ -91,7 +111,7 @@ function ServiceComponent({navigation}) {
   return (
    <>
     <Button
-      title="Dịch vụ đang sử dụng và tiền trọ"
+      title="Services and rent monthly"
       onPress={() =>
         navigation.navigate('Service')
       }
@@ -103,73 +123,16 @@ function ServiceComponent({navigation}) {
      }
     >
     <View style={styles.container}>
-      <View style={styles.contenttitle}>
-        <View style={styles.rowServer}>
-          <Text style={styles.service_column}>Tên dịch vụ</Text>
-        </View>
-        <View style={styles.rowServer}>
-          <Text style={styles.service_column}>Giá (VNĐ)</Text>
-        </View>
-        <View style={styles.rowServer}>
-          <Text style={styles.service_column}>Số lượng</Text>
-        </View>
-      </View>
-      {isLoading ? <ActivityIndicator/> : (
-        <FlatList
-          data={data}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({ item,i=0 }) => (
-            <>
-              <View style={styles.content}>
-                <View style={styles.rowServer}>
-                  <Text style={styles.service_column}>{item.name}</Text>
-                </View>
-                <View style={styles.rowServer}>
-                  <Text style={styles.service_column}>{item.cost}</Text>
-                </View>
-                <View style={styles.rowServer}>
-                  <Text style={styles.service_column}>{amount[i++]}</Text>
-                </View>
-              </View>
-            </>
-          )}
-        />
-      )}
-
-    </View>
-    <View style={styles.container}>
-      <View style={styles.contenttitle}>
-        <View style={styles.rowPaytherent}>
-          <Text style={styles.service_column}>Tháng</Text>
-        </View>
-        <View style={styles.rowPaytherent}>
-          <Text style={styles.service_column}>Tiền</Text>
-        </View>
-        <View style={styles.rowPaytherent}>
-          <Text style={styles.service_column}>Tình trạng</Text>
-        </View>
-      </View>
-      {isLoading ? <ActivityIndicator/> : (
-        <FlatList
-          data={data1}
-          keyExtractor={item => item.id.toString()}
-          renderItem={({ item }) => (
-            <>
-              <View style={styles.content}>
-                <View style={styles.rowPaytherent}>
-                  <Text style={styles.service_column}>{item.senddate}</Text>
-                </View>
-                <View style={styles.rowPaytherent}>
-                  <Text style={styles.service_column}>{item.money}</Text>
-                </View>
-                <View style={styles.rowPaytherent}>
-                  <Text style={styles.service_column}>{item.status == 1 ? 'đã' : 'chưa'}</Text>
-                </View>
-              </View>
-            </>
-          )}
-        />
-      )}
+        <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
+          <Row data={['Services are using']} style={styles.head} textStyle={styles.text}/>
+          <Row data={tableHeadService} style={styles.head} textStyle={styles.text}/>
+          <Rows data={tableDataService} textStyle={styles.text}/>
+        </Table>
+        <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
+          <Row data={['Rent Monthly']} style={styles.head} textStyle={styles.text}/>
+          <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
+          <Rows data={tableData} textStyle={styles.text}/>
+        </Table>
     </View>
     </ScrollView>
    </>
@@ -199,6 +162,15 @@ const styles = StyleSheet.create({
     flex: 1,
     // backgroundColor: 'blue',
   },
+  head: {
+    height: 40,
+    backgroundColor: '#f1f8ff',
+    textAlign: 'center'
+  },
+  text: {
+    margin: 6 ,
+    textAlign: 'center'
+  }
 
 })
 export default ServiceComponent;
