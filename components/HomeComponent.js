@@ -11,7 +11,8 @@ import {
   TouchableOpacity,
   NativeModules,
   RefreshControl,
-  FlatList
+  FlatList,
+  Dimensions
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -21,6 +22,10 @@ import HTMLView from 'react-native-htmlview';
 import {
   URL,
 } from './myconnect'
+
+const dimensions = Dimensions.get('window');
+const setHeight = Math.round(dimensions.width*9);
+const setWidth = dimensions.width;
 
 function HomeComponent({ navigation }) {
    const [id, setId] = useState(null);
@@ -155,11 +160,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
   },
   appintroslider: {
-    color: "blue"
+    color: "blue",
+    flex: 1.3
   },
   image: {
-    width: 320,
-    height: 320,
+    width: 380,
+    height: 540,
     marginVertical: 32,
   },
   text: {
