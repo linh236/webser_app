@@ -84,6 +84,10 @@ target 'webser_app' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
+  pod 'appcenter-core', :path => '../node_modules/appcenter'
+
+  pod 'CodePush', :path => '../node_modules/react-native-code-push'
+
   target 'webser_appTests' do
     inherit! :complete
     # Pods for testing

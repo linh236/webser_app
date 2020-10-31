@@ -1,3 +1,4 @@
+import codePush from "react-native-code-push";
 import React, {useState, useEffect} from 'react'
 import {
   View,
@@ -96,6 +97,11 @@ function IsLogin() {
     </Tab.Navigator>
   );
 }
+
+let codePushOptions = {
+  checkFrequency: codePush.CheckFrequency.ON_APP_RESUME,
+  installMode: codePush.InstallMode.IMMEDIATE
+};
 const App: () => React$Node = () => {
   const [id, setId] = useState([]);
   useEffect (() => {
@@ -117,4 +123,4 @@ const App: () => React$Node = () => {
 
   );
 };
-export default App;
+export default codePush(codePushOptions)(App);
