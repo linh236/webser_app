@@ -12,7 +12,8 @@ import {
   NativeModules,
   RefreshControl,
   FlatList,
-  Dimensions
+  Dimensions,
+  ImageBackground
 } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -84,7 +85,8 @@ function HomeComponent({ navigation }) {
 
   const _renderItem = ({ item }) => {
     return (
-      <View style={[styles.slide, {backgroundColor: item.backgroundColor}]}>
+      // <View style={[styles.slide, {backgroundColor:  URL+item.image.url}]}>
+     <ImageBackground  style={styles.image}>
         <Text style={[styles.title, {color: item.textcolor}]}>
           {item.title}
         </Text>
@@ -98,7 +100,8 @@ function HomeComponent({ navigation }) {
           value={item.text}
           stylesheet={styles}
         />
-      </View>
+        </ImageBackground>
+      // </View>
     );
   }
 
@@ -164,9 +167,10 @@ const styles = StyleSheet.create({
     flex: 1.3
   },
   image: {
-    width: 380,
-    height: 540,
+    height: 500,
+    width: 'auto',
     marginVertical: 32,
+    margin: 10,
   },
   text: {
     color: 'rgba(255, 255, 255, 0.8)',
