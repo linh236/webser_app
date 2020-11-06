@@ -106,9 +106,27 @@ function FeedbackComponent({navigation}) {
           getFeedback(id);
           setTitle('');
           setContent('');
-          Alert.alert("Feedback successfully.")
+          Alert.alert(
+            'Notice',
+            'Feedback successfully !',
+            [
+              {
+                text: "Ok",
+                onPress: () => console.log("successfully")
+              },
+            ]
+          );
         }else{
-          Alert.alert("Failed to respond. Please resend.")
+          Alert.alert(
+            'Warning',
+            'It is failed. Please send again.',
+            [
+              {
+                text: "Ok",
+                onPress: () => console.log("Fail and rent again")
+              },
+            ]
+          );
         }
       }).catch((err) => console.error(err))
   }
@@ -154,7 +172,16 @@ function FeedbackComponent({navigation}) {
             }
           });
         }else{
-          Alert.alert("Deleted Failed.")
+          Alert.alert(
+            'Warning',
+            'Delete failed.',
+            [
+              {
+                text: "Ok",
+                onPress: () => console.log("Delete failed")
+              },
+            ]
+          );
         }
       }).catch((err) => console.error(err))
   }

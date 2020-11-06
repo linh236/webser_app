@@ -98,7 +98,29 @@ function LedComponent({ }) {
     }).then((response) => response.json())
       .then((data) => {
         // NativeModules.DevSettings.reload();
-        // Alert.alert("Thanh cong");
+        if (status === 'on') {
+          Alert.alert(
+            'Notice',
+            'Turn off is successfully',
+            [
+              {
+                text: "Ok",
+                onPress: () => console.log("turn off")
+              },
+            ]
+          );
+        } else {
+          Alert.alert(
+            'Notice',
+            'Turn on is successfully',
+            [
+              {
+                text: "Ok",
+                onPress: () => console.log("turn on")
+              },
+            ]
+          );
+        }
         fetchLeds(id);
       }).catch((err) => console.error(err))
   }
@@ -120,7 +142,16 @@ function LedComponent({ }) {
     }).then((response) => response.json())
       .then((data) => {
         // NativeModules.DevSettings.reload();
-        Alert.alert("Thanh cong");
+        Alert.alert(
+          'Notice',
+          'Setup timmer is successfully',
+          [
+            {
+              text: "Ok",
+              onPress: () => console.log("Setup is successfully")
+            },
+          ]
+        );
         fetchLeds(id);
       }).catch((err) => console.error(err))
   }

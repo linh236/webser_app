@@ -85,7 +85,16 @@ function LoginComponent({ navigation }) {
       .then((data) => {
         if(data['id'] != null){
           if(data['disable'] == 1){
-            Alert.alert('Your account is blocked');
+            Alert.alert(
+              'Warning',
+              'Your account is blocked',
+              [
+                {
+                  text: "Ok",
+                  onPress: () => console.log("Block account")
+                },
+              ]
+            );
             return false;
           }
           // Alert.alert('Đăng nhập thành công');
@@ -93,7 +102,16 @@ function LoginComponent({ navigation }) {
           NativeModules.DevSettings.reload();
          // navigation.navigate('Home');
         }else{
-          Alert.alert('Login failed');
+          Alert.alert(
+            'Warning',
+            'Login is failed',
+            [
+              {
+                text: "Ok",
+                onPress: () => console.log("login failed")
+              },
+            ]
+          );
         }
       }).catch((err) => console.error(err))
   }

@@ -126,9 +126,27 @@ function SettingComponent() {
       }).then((response) => response.json())
       .then((data) => {
         if (data['status']== '200') {
-          Alert.alert('Updated successfully');
+          Alert.alert(
+            'Notice',
+            'Updated successfully.',
+            [
+              {
+                text: "Ok",
+                onPress: () => console.log("update OK")
+              },
+            ]
+          );
         } else {
-          Alert.alert('Updated failed');
+          Alert.alert(
+            'Warning',
+            'Updated failed !',
+            [
+              {
+                text: "Ok",
+                onPress: () => console.log("update failed")
+              },
+            ]
+          );
 
         }
       }).catch((err) => console.error(err))
