@@ -47,6 +47,7 @@ function ServiceComponent({navigation}) {
   const [tableDataService, setTableDataService] = useState([]);
   const [tableHead] = useState([ 'Order', 'Month','Money', 'Status']);
   const [tableData, setTableData] = useState([]);
+  const [total, setTotal] = useState(null);
   useEffect(() => {
     AsyncStorage.getItem('id', (error, value) => {
       if (value !== null) {
@@ -69,10 +70,11 @@ function ServiceComponent({navigation}) {
           //   arrayDateTableServiceafter.push(arrayDateTableService);
           // })
           json.data.map((key,value) => {
-            arrayDateTableService.push([value, key.name, key.cost, json.service_amount[value]])
+            arrayDateTableService.push([value, key.name, currencyFormat(Number(key.cost)), json.service_amount[value]])
           })
           // setTableDataService([]);
           setTableDataService(arrayDateTableService);
+
         } else {
           setError("You have not registered for the service")
         }
@@ -88,9 +90,12 @@ function ServiceComponent({navigation}) {
       .then((json) => {
         let arrayDataTable = [];
         json.data.map((key,value) => {
-          arrayDataTable.push([value,key.senddate, key.money, key.status == 1 ? "Yes" : "No"])
+          arrayDataTable.push([value,key.senddate, currencyFormat(key.money), key.status == 1 ? "Yes" : "No"])
         })
         setTableData(arrayDataTable)
+        var money = json.data.reduce((result, {money}) => result += money, 0);
+        setTotal(currencyFormat(money))
+
        })
       .catch((error) => {
         console.error(error);
@@ -108,6 +113,9 @@ function ServiceComponent({navigation}) {
     wait(2000).then(() => setRefreshing(false));
   }, []);
 
+  const currencyFormat = (num) => {
+     return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+  }
   return (
    <>
     <Button
@@ -132,6 +140,7 @@ function ServiceComponent({navigation}) {
           <Row data={['Rent Monthly']} style={styles.head} textStyle={styles.text}/>
           <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
           <Rows data={tableData} textStyle={styles.text}/>
+          <Row data={['Total',total+' vnd',]} style={styles.head} textStyle={styles.text}/>
         </Table>
     </View>
     </ScrollView>

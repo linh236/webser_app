@@ -248,7 +248,7 @@ function FeedbackComponent({navigation}) {
     </View>
 
     <TouchableOpacity style={styles.ButtonFeedback} onPress={()=>Feedback()}>
-      <Text style={styles.IconSend}><Ionicons style={styles.IconSend} name="ios-send"/>Send</Text>
+      <Text style={styles.IconSend}><Ionicons style={styles.IconSend} name="ios-send"/>Save</Text>
     </TouchableOpacity>
     <View style={styles.container}>
         <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>

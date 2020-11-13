@@ -25,6 +25,8 @@ import {
 import Voice from '@react-native-community/voice';
 import TimePicker from 'react-native-simple-time-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import moment from 'moment';
 moment.locale("vn");
 function LedComponent({ }) {
@@ -59,14 +61,14 @@ function LedComponent({ }) {
     fetch(url).then((response) => response.json())
       .then((json) => {
         setTableData([
-          [' Light 1', touchable_turn_on_off(value,'led_status0','status',json.leds.led_status0.status), touchable_settimer('led_status0','turnon',json.leds.led_status0.turnon), touchable_settimer('led_status0','turnoff',json.leds.led_status0.turnoff) ],
-          [' Light 2', touchable_turn_on_off(value,'led_status1','status',json.leds.led_status1.status), touchable_settimer('led_status1','turnon',json.leds.led_status1.turnon), touchable_settimer('led_status1','turnoff',json.leds.led_status1.turnoff) ],
-          [' Light 3', touchable_turn_on_off(value,'led_status2','status',json.leds.led_status2.status), touchable_settimer('led_status2','turnon',json.leds.led_status2.turnon), touchable_settimer('led_status2','turnoff',json.leds.led_status2.turnoff) ],
-          [' Light 4', touchable_turn_on_off(value,'led_status3','status',json.leds.led_status3.status), touchable_settimer('led_status3','turnon',json.leds.led_status3.turnon), touchable_settimer('led_status3','turnoff',json.leds.led_status3.turnoff) ],
-          [' Fan', touchable_turn_on_off(value,'led_status5','status',json.leds.led_status5.status), touchable_settimer('led_status5','turnon',json.leds.led_status5.turnon), touchable_settimer('led_status5','turnoff',json.leds.led_status5.turnoff) ],
-          [' Power socket 1', touchable_turn_on_off(value,'led_status6','status',json.leds.led_status6.status), touchable_settimer('led_status6','turnon',json.leds.led_status6.turnon), touchable_settimer('led_status6','turnoff',json.leds.led_status6.turnoff) ],
-          [' Power socket 2', touchable_turn_on_off(value,'led_status7','status',json.leds.led_status7.status), touchable_settimer('led_status7','turnon',json.leds.led_status7.turnon), touchable_settimer('led_status7','turnoff',json.leds.led_status7.turnoff) ],
-          [' Power socket 3', touchable_turn_on_off(value,'led_status8','status',json.leds.led_status8.status), touchable_settimer('led_status8','turnon',json.leds.led_status8.turnon), touchable_settimer('led_status8','turnoff',json.leds.led_status8.turnoff) ],
+          [display('Light 1',json.leds.led_status0.active), touchable_turn_on_off(value,'led_status0','status',json.leds.led_status0.status, json.leds.led_status0.active), touchable_settimer('led_status0','turnon',json.leds.led_status0.turnon, json.leds.led_status0.active), touchable_settimer('led_status0','turnoff',json.leds.led_status0.turnoff, json.leds.led_status0.active) ],
+          [display('Light 2',json.leds.led_status1.active), touchable_turn_on_off(value,'led_status1','status',json.leds.led_status1.status, json.leds.led_status1.active), touchable_settimer('led_status1','turnon',json.leds.led_status1.turnon, json.leds.led_status1.active), touchable_settimer('led_status1','turnoff',json.leds.led_status1.turnoff, json.leds.led_status1.active) ],
+          [display('Light 3',json.leds.led_status2.active), touchable_turn_on_off(value,'led_status2','status',json.leds.led_status2.status, json.leds.led_status2.active), touchable_settimer('led_status2','turnon',json.leds.led_status2.turnon, json.leds.led_status2.active), touchable_settimer('led_status2','turnoff',json.leds.led_status2.turnoff, json.leds.led_status2.active) ],
+          [display('Light 4',json.leds.led_status3.active), touchable_turn_on_off(value,'led_status3','status',json.leds.led_status3.status, json.leds.led_status3.active), touchable_settimer('led_status3','turnon',json.leds.led_status3.turnon, json.leds.led_status3.active), touchable_settimer('led_status3','turnoff',json.leds.led_status3.turnoff, json.leds.led_status3.active) ],
+          [display('Fan',json.leds.led_status5.active), touchable_turn_on_off(value,'led_status5','status',json.leds.led_status5.status, json.leds.led_status5.active), touchable_settimer('led_status5','turnon',json.leds.led_status5.turnon, json.leds.led_status5.active), touchable_settimer('led_status5','turnoff',json.leds.led_status5.turnoff, json.leds.led_status5.active) ],
+          [display(' Power socket 1',json.leds.led_status6.active), touchable_turn_on_off(value,'led_status6','status',json.leds.led_status6.status, json.leds.led_status6.active), touchable_settimer('led_status6','turnon',json.leds.led_status6.turnon, json.leds.led_status6.active), touchable_settimer('led_status6','turnoff',json.leds.led_status6.turnoff, json.leds.led_status6.active) ],
+          [display(' Power socket 2',json.leds.led_status7.active), touchable_turn_on_off(value,'led_status7','status',json.leds.led_status7.status, json.leds.led_status7.active), touchable_settimer('led_status7','turnon',json.leds.led_status7.turnon, json.leds.led_status7.active), touchable_settimer('led_status7','turnoff',json.leds.led_status7.turnoff, json.leds.led_status7.active) ],
+          [display(' Power socket 3',json.leds.led_status8.active), touchable_turn_on_off(value,'led_status8','status',json.leds.led_status8.status, json.leds.led_status8.active), touchable_settimer('led_status8','turnon',json.leds.led_status8.turnon, json.leds.led_status8.active), touchable_settimer('led_status8','turnoff',json.leds.led_status8.turnoff, json.leds.led_status8.active) ],
         ])
       })
       .catch((error) => {
@@ -75,7 +77,20 @@ function LedComponent({ }) {
       .finally(() => setLoading(false));
   }
   // Send data to api
-  const SendDataApi = (id,name, column, status) => {
+  const SendDataApi = (id,name, column, status, active) => {
+    if (active === 'disable') {
+      Alert.alert(
+        'Notice',
+        'This led is disabled. Please contact to manager.',
+        [
+          {
+            text: "Ok",
+            onPress: () => console.log("this led is disabled")
+          },
+        ]
+      );
+      return false;
+    }
     let Setstatus = '';
     if (status == "off") {
       Setstatus = "on";
@@ -124,8 +139,21 @@ function LedComponent({ }) {
         fetchLeds(id);
       }).catch((err) => console.error(err))
   }
-  const SendDataApiTimer = (name, column, status) => {
+  const SendDataApiTimer = (name, column, status,active) => {
     // status the same timer
+    if (active === 'disable') {
+      Alert.alert(
+        'Notice',
+        'This led is disabled. Please contact to manager.',
+        [
+          {
+            text: "Ok",
+            onPress: () => console.log("this led is disabled")
+          },
+        ]
+      );
+      return false;
+    }
     let url_send_data = URL+`/api/app_send/${id}`;
     fetch(url_send_data, {
       method: 'POST',
@@ -156,10 +184,23 @@ function LedComponent({ }) {
       }).catch((err) => console.error(err))
   }
   // setup time
-    const showDatePicker = (name, column) => {
-     setDatePickerVisibility(true);
-     setName(name)
-     setColumn(column)
+    const showDatePicker = (name, column,active) => {
+      if (active === 'disable') {
+        Alert.alert(
+          'Notice',
+          'This led is disabled. Please contact to manager.',
+          [
+            {
+              text: "Ok",
+              onPress: () => console.log("this led is disabled")
+            },
+          ]
+        );
+        return false;
+      }
+      setDatePickerVisibility(true);
+      setName(name)
+      setColumn(column)
    };
 
    const hideDatePicker = () => {
@@ -189,22 +230,39 @@ function LedComponent({ }) {
      wait(2000).then(() => setRefreshing(false));
     }, []);
 
-  const touchable_turn_on_off = (id,name,column,status)=> {
+  const touchable_turn_on_off = (id,name,column,status, active)=> {
     return(
-      <TouchableOpacity onPress={() => SendDataApi(id,name,column,status)}>
+      <TouchableOpacity onPress={() => SendDataApi(id,name,column,status,active)}>
         <Text style={styles.Titlestatus}>{status}</Text>
       </TouchableOpacity>
     )
   }
 
-  const touchable_settimer = (name, column,status) => {
+  const touchable_settimer = (name, column,status, active) => {
     // name: led_status0
     // column: 'turnon'
     // status: value turnon or turnoff
     return(
-      <TouchableOpacity onPress={() => showDatePicker(name, column)}>
+      <TouchableOpacity onPress={() => showDatePicker(name, column,active)}>
         <Text style={styles.TitleTurnoff}>{status}</Text>
       </TouchableOpacity>
+    )
+  }
+
+  const display = (name, active) => {
+    console.log(active);
+    return(
+      <>
+        <View style={styles.displayLedName}>
+        {
+          active === 'disable' ?
+            <Ionicons name="ios-lock" style={styles.iconLedName} />
+          :
+            <Ionicons name="ios-checkmark" style={styles.iconLedName} />
+        }
+          <Text style={styles.ledTitle}>{name}</Text>
+        </View>
+      </>
     )
   }
   return (
@@ -320,6 +378,17 @@ const styles = StyleSheet.create({
  text: {
    margin: 6 ,
    textAlign: 'center'
+ },
+ displayLedName: {
+   position: 'relative',
+ },
+ ledTitle: {
+   textAlign: 'center'
+ },
+ iconLedName:{
+   position: 'absolute',
+   top: -20,
+   left: 70,
  }
 
 });
