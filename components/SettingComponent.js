@@ -22,6 +22,7 @@ import {
   URL,
 } from './myconnect'
 
+import { Table, Row, Rows } from 'react-native-table-component';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -53,11 +54,15 @@ function SettingComponent() {
   const [deposit, setDeposit] = useState();
   const [note, setNote] = useState();
   const [start, setStart] = useState();
+  const [tableDataMembers, setTableDataMembers] = useState([]);
+  const [tableHead] = useState(['Order', 'Name']);
+
   useEffect(() => {
     AsyncStorage.getItem('id', (error, value) => {
       if (value !== null) {
         setId(value)
         getInfo(value)
+        getMembers(value)
       }
     });
   }, []);
@@ -103,6 +108,24 @@ function SettingComponent() {
   const showTimepicker = () => {
     showMode('time');
   };
+
+  const getMembers = (id) => {
+    let url_send_data = URL+`/api/info_members/${id}`;
+      fetch(url_send_data)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.members === null) {
+          return false;
+        }
+        let members_array = [];
+        data.members.name.map((key,value)=> {
+          members_array.push([value,key])
+        })
+        setTableDataMembers(members_array);
+      })
+      .catch((err) => console.error(err))
+   }
+
 
   const CheckUpdate = () => {
     let url = URL+`/api/updateInfo/${id}`;
@@ -155,6 +178,7 @@ function SettingComponent() {
     AsyncStorage.getItem('id', (error, value) => {
       if (value !== null) {
         getInfo(value)
+        getMembers(value)
       }
     });
     setRefreshing(true);
@@ -314,6 +338,13 @@ function SettingComponent() {
             <Text style={styles.loginText}>Save</Text>
           </TouchableOpacity>
         </View>
+
+        <View style={styles.containertable}>
+          <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
+            <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
+            <Rows data={tableDataMembers} textStyle={styles.text}/>
+          </Table>
+        </View>
         <View>
         {show && (
           <DateTimePicker
@@ -395,6 +426,19 @@ function SettingComponent() {
      fontSize: 12,
      marginLeft: 10,
      marginRight: 10,
-   }
+   },
+   containertable: {
+     flex: 1,
+     padding: 2,
+     backgroundColor: '#fff'
+   },
+  head: {
+    height: 40,
+    backgroundColor: '#f1f8ff'
+  },
+  text: {
+    margin: 6 ,
+    textAlign: 'center'
+  },
   })
 export default SettingComponent;

@@ -61,9 +61,9 @@ function LedComponent({ }) {
     fetch(url).then((response) => response.json())
       .then((json) => {
         setTableData([
-          [display('Light 1',json.leds.led_status0.active), touchable_turn_on_off(value,'led_status0','status',json.leds.led_status0.status, json.leds.led_status0.active), touchable_settimer('led_status0','turnon',json.leds.led_status0.turnon, json.leds.led_status0.active), touchable_settimer('led_status0','turnoff',json.leds.led_status0.turnoff, json.leds.led_status0.active) ],
-          [display('Light 2',json.leds.led_status1.active), touchable_turn_on_off(value,'led_status1','status',json.leds.led_status1.status, json.leds.led_status1.active), touchable_settimer('led_status1','turnon',json.leds.led_status1.turnon, json.leds.led_status1.active), touchable_settimer('led_status1','turnoff',json.leds.led_status1.turnoff, json.leds.led_status1.active) ],
-          [display('Light 3',json.leds.led_status2.active), touchable_turn_on_off(value,'led_status2','status',json.leds.led_status2.status, json.leds.led_status2.active), touchable_settimer('led_status2','turnon',json.leds.led_status2.turnon, json.leds.led_status2.active), touchable_settimer('led_status2','turnoff',json.leds.led_status2.turnoff, json.leds.led_status2.active) ],
+          [display('Door',json.leds.led_status0.active), touchable_turn_on_off(value,'led_status0','status',json.leds.led_status0.status, json.leds.led_status0.active), touchable_settimer('led_status0','turnon',json.leds.led_status0.turnon, json.leds.led_status0.active), touchable_settimer('led_status0','turnoff',json.leds.led_status0.turnoff, json.leds.led_status0.active) ],
+          [display('Light',json.leds.led_status1.active), touchable_turn_on_off(value,'led_status1','status',json.leds.led_status1.status, json.leds.led_status1.active), touchable_settimer('led_status1','turnon',json.leds.led_status1.turnon, json.leds.led_status1.active), touchable_settimer('led_status1','turnoff',json.leds.led_status1.turnoff, json.leds.led_status1.active) ],
+          [display('Power socket',json.leds.led_status2.active), touchable_turn_on_off(value,'led_status2','status',json.leds.led_status2.status, json.leds.led_status2.active), touchable_settimer('led_status2','turnon',json.leds.led_status2.turnon, json.leds.led_status2.active), touchable_settimer('led_status2','turnoff',json.leds.led_status2.turnoff, json.leds.led_status2.active) ],
           [display('Light 4',json.leds.led_status3.active), touchable_turn_on_off(value,'led_status3','status',json.leds.led_status3.status, json.leds.led_status3.active), touchable_settimer('led_status3','turnon',json.leds.led_status3.turnon, json.leds.led_status3.active), touchable_settimer('led_status3','turnoff',json.leds.led_status3.turnoff, json.leds.led_status3.active) ],
           [display('Fan',json.leds.led_status5.active), touchable_turn_on_off(value,'led_status5','status',json.leds.led_status5.status, json.leds.led_status5.active), touchable_settimer('led_status5','turnon',json.leds.led_status5.turnon, json.leds.led_status5.active), touchable_settimer('led_status5','turnoff',json.leds.led_status5.turnoff, json.leds.led_status5.active) ],
           [display(' Power socket 1',json.leds.led_status6.active), touchable_turn_on_off(value,'led_status6','status',json.leds.led_status6.status, json.leds.led_status6.active), touchable_settimer('led_status6','turnon',json.leds.led_status6.turnon, json.leds.led_status6.active), touchable_settimer('led_status6','turnoff',json.leds.led_status6.turnoff, json.leds.led_status6.active) ],
@@ -213,6 +213,21 @@ function LedComponent({ }) {
      SendDataApiTimer(name, column, timer)
    };
 
+   const getMembers = (id) => {
+     let url_send_data = URL+`/api/info_members/${id}`;
+       fetch(url_send_data)
+       .then((response) => response.json())
+       .then((data) => {
+         if (data.members === null) {
+           setIsNull(true)
+           return false;
+         }
+         setIsNull(false);
+         setMembers(data.members)
+       })
+       .catch((err) => console.error(err))
+    }
+
    const wait = (timeout) => {
     return new Promise(resolve => {
         setTimeout(resolve, timeout);
@@ -250,7 +265,6 @@ function LedComponent({ }) {
   }
 
   const display = (name, active) => {
-    console.log(active);
     return(
       <>
         <View style={styles.displayLedName}>
