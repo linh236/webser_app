@@ -48,6 +48,7 @@ function ServiceComponent({navigation}) {
   const [tableHead] = useState([ 'Order', 'Month','Money', 'Status']);
   const [tableData, setTableData] = useState([]);
   const [total, setTotal] = useState(null);
+  const [totalUnpaid, setTotalUnpaid] = useState(null);
   useEffect(() => {
     AsyncStorage.getItem('id', (error, value) => {
       if (value !== null) {
@@ -70,7 +71,7 @@ function ServiceComponent({navigation}) {
           //   arrayDateTableServiceafter.push(arrayDateTableService);
           // })
           json.data.map((key,value) => {
-            arrayDateTableService.push([value, key.name, currencyFormat(Number(key.cost)), json.service_amount[value]])
+            arrayDateTableService.push([value, capitalize(key.name), currencyFormat(Number(key.cost)), json.service_amount[value]])
           })
           // setTableDataService([]);
           setTableDataService(arrayDateTableService);
@@ -89,12 +90,21 @@ function ServiceComponent({navigation}) {
     fetch(url).then((response) => response.json())
       .then((json) => {
         let arrayDataTable = [];
+        let arrayDataPaid = [];
+        let arrayDataUnPaid = [];
         json.data.map((key,value) => {
           arrayDataTable.push([value,key.senddate, currencyFormat(key.money), key.status == 1 ? "Yes" : "No"])
+          if (key.status === 1) {
+            arrayDataPaid.push(key.money);
+          }else{
+            arrayDataUnPaid.push(key.money);
+          }
         })
         setTableData(arrayDataTable)
-        var money = json.data.reduce((result, {money}) => result += money, 0);
+        var money = arrayDataPaid.reduce((result, money) => result += money, 0);
+        var unpaidmoney = arrayDataUnPaid.reduce((result, money) => result += money, 0);
         setTotal(currencyFormat(money))
+        setTotalUnpaid(currencyFormat(unpaidmoney))
 
        })
       .catch((error) => {
@@ -115,6 +125,10 @@ function ServiceComponent({navigation}) {
 
   const currencyFormat = (num) => {
      return num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+  }
+
+  const capitalize = (str) => {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
   return (
    <>
@@ -141,6 +155,7 @@ function ServiceComponent({navigation}) {
           <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
           <Rows data={tableData} textStyle={styles.text}/>
           <Row data={['Total',total+' vnd',]} style={styles.head} textStyle={styles.text}/>
+          <Row data={['Still owe',totalUnpaid+' vnd',]} style={styles.head} textStyle={styles.text}/>
         </Table>
     </View>
     </ScrollView>

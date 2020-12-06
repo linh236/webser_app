@@ -17,7 +17,8 @@ import {
   TouchableHighlight,
   ActivityIndicator,
   Alert,
-  RefreshControl
+  RefreshControl,
+  Picker
 } from 'react-native';
 import {
   URL,
@@ -46,7 +47,7 @@ function LedComponent({ }) {
   const [column, setColumn] = useState('');
   const [tableHead] = useState(['Name', 'Status','Timer', 'Timeout']);
   const [tableData, setTableData] = useState([]);
-
+  const [selectedValue, setSelectedValue] = useState("Select");
 
   useEffect(() => {
     AsyncStorage.getItem('id', (error, value) => {
@@ -61,14 +62,14 @@ function LedComponent({ }) {
     fetch(url).then((response) => response.json())
       .then((json) => {
         setTableData([
-          [display('Door',json.leds.led_status0.active), touchable_turn_on_off(value,'led_status0','status',json.leds.led_status0.status, json.leds.led_status0.active), touchable_settimer('led_status0','turnon',json.leds.led_status0.turnon, json.leds.led_status0.active), touchable_settimer('led_status0','turnoff',json.leds.led_status0.turnoff, json.leds.led_status0.active) ],
-          [display('Light',json.leds.led_status1.active), touchable_turn_on_off(value,'led_status1','status',json.leds.led_status1.status, json.leds.led_status1.active), touchable_settimer('led_status1','turnon',json.leds.led_status1.turnon, json.leds.led_status1.active), touchable_settimer('led_status1','turnoff',json.leds.led_status1.turnoff, json.leds.led_status1.active) ],
-          [display('Power socket',json.leds.led_status2.active), touchable_turn_on_off(value,'led_status2','status',json.leds.led_status2.status, json.leds.led_status2.active), touchable_settimer('led_status2','turnon',json.leds.led_status2.turnon, json.leds.led_status2.active), touchable_settimer('led_status2','turnoff',json.leds.led_status2.turnoff, json.leds.led_status2.active) ],
-          [display('Light 4',json.leds.led_status3.active), touchable_turn_on_off(value,'led_status3','status',json.leds.led_status3.status, json.leds.led_status3.active), touchable_settimer('led_status3','turnon',json.leds.led_status3.turnon, json.leds.led_status3.active), touchable_settimer('led_status3','turnoff',json.leds.led_status3.turnoff, json.leds.led_status3.active) ],
-          [display('Fan',json.leds.led_status5.active), touchable_turn_on_off(value,'led_status5','status',json.leds.led_status5.status, json.leds.led_status5.active), touchable_settimer('led_status5','turnon',json.leds.led_status5.turnon, json.leds.led_status5.active), touchable_settimer('led_status5','turnoff',json.leds.led_status5.turnoff, json.leds.led_status5.active) ],
-          [display(' Power socket 1',json.leds.led_status6.active), touchable_turn_on_off(value,'led_status6','status',json.leds.led_status6.status, json.leds.led_status6.active), touchable_settimer('led_status6','turnon',json.leds.led_status6.turnon, json.leds.led_status6.active), touchable_settimer('led_status6','turnoff',json.leds.led_status6.turnoff, json.leds.led_status6.active) ],
-          [display(' Power socket 2',json.leds.led_status7.active), touchable_turn_on_off(value,'led_status7','status',json.leds.led_status7.status, json.leds.led_status7.active), touchable_settimer('led_status7','turnon',json.leds.led_status7.turnon, json.leds.led_status7.active), touchable_settimer('led_status7','turnoff',json.leds.led_status7.turnoff, json.leds.led_status7.active) ],
-          [display(' Power socket 3',json.leds.led_status8.active), touchable_turn_on_off(value,'led_status8','status',json.leds.led_status8.status, json.leds.led_status8.active), touchable_settimer('led_status8','turnon',json.leds.led_status8.turnon, json.leds.led_status8.active), touchable_settimer('led_status8','turnoff',json.leds.led_status8.turnoff, json.leds.led_status8.active) ],
+          [display(shownameled(json.leds.led_status0.kind),json.leds.led_status0.active), touchable_turn_on_off(value,'led_status0','status',json.leds.led_status0.status, json.leds.led_status0.active), touchable_settimer('led_status0','turnon',json.leds.led_status0.turnon, json.leds.led_status0.active), touchable_settimer('led_status0','turnoff',json.leds.led_status0.turnoff, json.leds.led_status0.active) ],
+          [display(shownameled(json.leds.led_status1.kind),json.leds.led_status1.active), touchable_turn_on_off(value,'led_status1','status',json.leds.led_status1.status, json.leds.led_status1.active), touchable_settimer('led_status1','turnon',json.leds.led_status1.turnon, json.leds.led_status1.active), touchable_settimer('led_status1','turnoff',json.leds.led_status1.turnoff, json.leds.led_status1.active) ],
+          [display(shownameled(json.leds.led_status2.kind),json.leds.led_status2.active), touchable_turn_on_off(value,'led_status2','status',json.leds.led_status2.status, json.leds.led_status2.active), touchable_settimer('led_status2','turnon',json.leds.led_status2.turnon, json.leds.led_status2.active), touchable_settimer('led_status2','turnoff',json.leds.led_status2.turnoff, json.leds.led_status2.active) ],
+          [display(shownameled(json.leds.led_status3.kind),json.leds.led_status3.active), touchable_turn_on_off(value,'led_status3','status',json.leds.led_status3.status, json.leds.led_status3.active), touchable_settimer('led_status3','turnon',json.leds.led_status3.turnon, json.leds.led_status3.active), touchable_settimer('led_status3','turnoff',json.leds.led_status3.turnoff, json.leds.led_status3.active) ],
+          [display(shownameled(json.leds.led_status5.kind),json.leds.led_status5.active), touchable_turn_on_off(value,'led_status5','status',json.leds.led_status5.status, json.leds.led_status5.active), touchable_settimer('led_status5','turnon',json.leds.led_status5.turnon, json.leds.led_status5.active), touchable_settimer('led_status5','turnoff',json.leds.led_status5.turnoff, json.leds.led_status5.active) ],
+          [display(shownameled(json.leds.led_status6.kind),json.leds.led_status6.active), touchable_turn_on_off(value,'led_status6','status',json.leds.led_status6.status, json.leds.led_status6.active), touchable_settimer('led_status6','turnon',json.leds.led_status6.turnon, json.leds.led_status6.active), touchable_settimer('led_status6','turnoff',json.leds.led_status6.turnoff, json.leds.led_status6.active) ],
+          [display(shownameled(json.leds.led_status7.kind),json.leds.led_status7.active), touchable_turn_on_off(value,'led_status7','status',json.leds.led_status7.status, json.leds.led_status7.active), touchable_settimer('led_status7','turnon',json.leds.led_status7.turnon, json.leds.led_status7.active), touchable_settimer('led_status7','turnoff',json.leds.led_status7.turnoff, json.leds.led_status7.active) ],
+          [display(shownameled(json.leds.led_status8.kind),json.leds.led_status8.active), touchable_turn_on_off(value,'led_status8','status',json.leds.led_status8.status, json.leds.led_status8.active), touchable_settimer('led_status8','turnon',json.leds.led_status8.turnon, json.leds.led_status8.active), touchable_settimer('led_status8','turnoff',json.leds.led_status8.turnoff, json.leds.led_status8.active) ],
         ])
       })
       .catch((error) => {
@@ -279,6 +280,48 @@ function LedComponent({ }) {
       </>
     )
   }
+
+  const shownameled = (kind) => {
+    if (kind === "0") {
+      return "Door";
+    } else if (kind === "1") {
+      return "Light";
+    } else if (kind === "2") {
+      return "Fan";
+    }else{
+      return "Power socket";
+    }
+  }
+
+  const group_leds = (itemValue) => {
+
+    let url_send_data = URL+`/api/groupleds/${id}`;
+      fetch(url_send_data, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-type': 'application/json'
+        },
+        body: JSON.stringify({
+          valueselect: itemValue
+        })
+      }).then((response) => response.json())
+      .then((data) => {
+        if(data['status'] === 200){
+          Alert.alert(
+            'Notice',
+            'Successfully',
+            [
+              {
+                text: "Ok",
+                onPress: () => console.log("Groupleds are successfully")
+              },
+            ]
+          );
+        }
+        fetchLeds(id)
+      }).catch((err) => console.error(err))
+  }
   return (
     <>
       <ScrollView style={styles.ScrollView}
@@ -289,7 +332,18 @@ function LedComponent({ }) {
       >
         <View style={styles.MainTitle}><Text>DASHBOARD</Text></View>
         <View style={styles.container}>
-
+          <Picker
+               selectedValue={selectedValue}
+               onValueChange={(itemValue, itemIndex) => group_leds(itemValue)}
+             >
+               <Picker.Item label="Select" />
+               <Picker.Item label="Light on" value="2" />
+               <Picker.Item label="Light off" value="3" />
+               <Picker.Item label="Fan on" value="4" />
+               <Picker.Item label="Fan on" value="5" />
+               <Picker.Item label="Power socket on" value="6" />
+               <Picker.Item label="Power socket off" value="7" />
+           </Picker>
           {isLoading ? <ActivityIndicator /> : (
             <>
               <View style={styles.container}>

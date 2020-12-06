@@ -47,7 +47,7 @@ function FeedbackComponent({navigation}) {
   const [data, setData] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
   const [tableData, setTableData] = useState([]);
-  const [tableHead] = useState(['Order', 'Title','Content', 'Status']);
+  const [tableHead] = useState(['Order', 'Title','Status', 'Created at']);
 
   useEffect(() => {
     AsyncStorage.getItem('id', (error, value) => {
@@ -64,7 +64,7 @@ function FeedbackComponent({navigation}) {
         setData(json.data);
         let arrayDataFeedback = [];
         json.data.map((key,value)=> {
-          arrayDataFeedback.push([touchable_popup(key.id,value), touchable_popup(key.id,key.title),  touchable_popup(key.id,key.content),  touchable_popup(key.id,key.mark == 0 ? "No":"Yes")])
+          arrayDataFeedback.push([touchable_popup(key.id,value), touchable_popup(key.id,key.title), touchable_popup(key.id,show_status(key.mark)), touchable_popup(key.id,moment(key.created_at).format('Y-MM-DD HH:mm')),])
         })
         setTableData(arrayDataFeedback);
 
@@ -207,6 +207,18 @@ function FeedbackComponent({navigation}) {
         </TouchableOpacity>
       </>
     )
+  }
+  // 4 status: new, inprogess, done, close
+  const show_status = (status) => {
+    if (status === 0) {
+      return "New";
+    } else if (status === 1){
+      return "Inprogess";
+    } else if (status === 2) {
+      return "Done";
+    } else {
+      return "Close";
+    }
   }
   return (
    <>

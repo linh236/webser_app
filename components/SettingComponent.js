@@ -339,12 +339,14 @@ function SettingComponent() {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.containertable}>
-          <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
-            <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
-            <Rows data={tableDataMembers} textStyle={styles.text}/>
-          </Table>
-        </View>
+        {
+          //   <View style={styles.containertable}>
+          //   <Table borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}>
+          //     <Row data={tableHead} style={styles.head} textStyle={styles.text}/>
+          //     <Rows data={tableDataMembers} textStyle={styles.text}/>
+          //   </Table>
+          // </View>
+        }
         <View>
         {show && (
           <DateTimePicker
